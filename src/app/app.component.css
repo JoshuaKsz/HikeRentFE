@@ -1,0 +1,10 @@
+.content {
+  margin-left: 260px;
+  padding: 25px;
+}
+
+@media (max-width: 768px) {
+  .content {
+    margin-left: 0;
+  }
+}

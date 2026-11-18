@@ -1,0 +1,112 @@
+
+/* Hamburger inside sidebar */
+.toggle-btn {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: transparent;
+  color: white;
+  border: none;
+  border-radius: 5px;
+
+  font-size: 28px;
+  cursor: pointer;
+}
+
+/* Brand spacing */
+.brand {
+  margin-top: 55px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* When sidebar is collapsed */
+.toggle-btn.collapsed {
+  left: 90px;
+}
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100vh;
+  padding: 15px;
+  background: #11372C;
+  transition: width 0.3s ease;
+  overflow-x: hidden;
+  z-index: 1000;
+}
+
+/* Collapsed sidebar */
+.sidebar.collapsed {
+  width: 75px;
+}
+
+/* Move hamburger when collapsed */
+.sidebar.collapsed ~ .toggle-btn {
+  left: 50px;
+}
+
+/* Brand */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  white-space: nowrap;
+}
+
+/* Menu */
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px;
+  margin-bottom: 8px;
+  color: #adb5bd;
+  text-decoration: none;
+  border-radius: 8px;
+  white-space: nowrap;
+  transition: 0.3s;
+}
+
+.menu-item i {
+  font-size: 20px;
+  min-width: 25px;
+  text-align: center;
+}
+
+.menu-item:hover,
+.menu-item.active {
+  background: #347249;
+  color: white;
+}
+
+/* Collapsed menu alignment */
+.sidebar.collapsed .menu-item {
+  justify-content: center;
+  padding: 12px 5px;
+}
+
+.menu-title {
+  color: #adb5bd;
+  font-size: 11px;
+}
+
+/* Mobile overlay */
+.sidebar-overlay {
+  display: none;
+}

@@ -1,0 +1,118 @@
+<div class="layout" [class.collapsed]="isSidebarCollapsed">
+
+  <app-sidebar
+    (collapsedChange)="isSidebarCollapsed = $event">
+  </app-sidebar>
+
+  <div class="content">
+    <nav class="navbar bg-white shadow-sm rounded p-3 mb-4">
+
+      <span class="ms-auto fw-semibold">
+        Admin Dashboard
+      </span>
+    </nav>
+
+    <h3>Dashboard</h3>
+    <p class="text-muted">Selamat datang di dashboard Angular.</p>
+
+    <div class="row g-4">
+
+      <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+          <div class="card-body">
+            <h5>Total Alat</h5>
+            <h2>1</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+          <div class="card-body">
+            <h5>Stock Tersedia</h5>
+            <h2>85</h2>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+          <div class="card-body">
+            <h5>Rental Aktif</h5>
+            <h2>5</h2>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card shadow-sm border-0">
+          <div class="card-body">
+            <h5>Menunggu Pengambilan</h5>
+            <h2>3</h2>
+          </div>
+        </div>
+      </div>
+      
+
+    </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 p-3">
+                <h2>Rental Terbaru</h2>
+                <div class="card-body">
+                    <table class="table">
+                        <thead class="table-secondary">
+                            <tr>
+                                <td class="text-center align-middle">Kode Rental</td>
+                                <td class="text-center align-middle">Customer</td>
+                                <td class="text-center align-middle">Tgl Sewa</td>
+                                <td class="text-center align-middle">Tgl kembali</td>
+                                <td class="text-center align-middle">status</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-center align-middle">RENT001</td>
+                                <td class="text-center align-middle">Andi Pratama</td>
+                                <td class="text-center align-middle">18 Nov 2026</td>
+                                <td class="text-center align-middle">26 Nov 2026</td>
+                                <td class="text-center align-middle">Ongoing</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center align-middle">RENT001</td>
+                                <td class="text-center align-middle">Andi Pratama</td>
+                                <td class="text-center align-middle">18 Nov 2026</td>
+                                <td class="text-center align-middle">26 Nov 2026</td>
+                                <td class="text-center align-middle">Ongoing</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center align-middle">RENT001</td>
+                                <td class="text-center align-middle">Andi Pratama</td>
+                                <td class="text-center align-middle">18 Nov 2026</td>
+                                <td class="text-center align-middle">26 Nov 2026</td>
+                                <td class="text-center align-middle">Ongoing</td>
+                            </tr>
+                            <tr>
+                                <td class="text-center align-middle">RENT001</td>
+                                <td class="text-center align-middle">Andi Pratama</td>
+                                <td class="text-center align-middle">18 Nov 2026</td>
+                                <td class="text-center align-middle">26 Nov 2026</td>
+                                <td class="text-center align-middle">Ongoing</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h4>Ringkasan Stock Alat</h4>
+                    <p class="fs-5">tersedia     18</p>
+                    <p class="fs-5">perawatan    4</p>
+                    <p class="fs-5">Rusak     2</p>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

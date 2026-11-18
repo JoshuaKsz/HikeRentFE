@@ -1,0 +1,60 @@
+
+<!-- Overlay -->
+<div class="sidebar-overlay"
+     [class.show]="isOpen"
+     (click)="toggleSidebar()">
+</div>
+
+
+
+<!-- Sidebar -->
+<aside class="sidebar"
+       [class.show]="isOpen"
+       [class.collapsed]="isCollapsed">
+  <!-- Hamburger button -->
+  <button class="toggle-btn" (click)="toggleCollapse()">
+    <i class="bi" [ngClass]="isCollapsed ? 'bi-list' : 'bi-list'"></i>
+  </button>
+  <div class="brand d-flex align-items-center justify-content-start">
+    <img src="assets/images/logo.png"
+         alt="Logo"
+         width="80"
+         height="80">
+    <span *ngIf="!isCollapsed" class="text-white">HikeRent</span>
+    <div *ngIf="isCollapsed" class="p-1 mt-1">
+    </div>
+  </div>
+
+  <!-- Main Menu -->
+  <a *ngFor="let menu of menus"
+     href="javascript:void(0)"
+     class="menu-item"
+     [class.active]="activeMenu === menu.name"
+     (click)="selectMenu(menu.name)"
+     [title]="isCollapsed ? menu.name : ''">
+
+    <i class="bi" [ngClass]="menu.icon"></i>
+
+    <span *ngIf="!isCollapsed">{{ menu.name }}</span>
+  </a>
+
+  <hr>
+
+  <small class="menu-title" *ngIf="!isCollapsed">
+    PENGATURAN
+  </small>
+
+  <!-- Settings -->
+  <a *ngFor="let menu of settings"
+     href="javascript:void(0)"
+     class="menu-item"
+     [class.active]="activeMenu === menu.name"
+     (click)="selectMenu(menu.name)"
+     [title]="isCollapsed ? menu.name : ''">
+
+    <i class="bi" [ngClass]="menu.icon"></i>
+
+    <span *ngIf="!isCollapsed">{{ menu.name }}</span>
+  </a>
+
+</aside>
