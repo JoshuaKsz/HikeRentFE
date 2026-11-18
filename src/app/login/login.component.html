@@ -1,0 +1,67 @@
+
+<div class="login-page container-fluid">
+
+    <!-- Background gambar memenuhi seluruh layar -->
+    <div class="login-background">
+        <img src="assets/login_page.jpg" alt="Background login">
+    </div>
+
+    <!-- Card login berada di depan background -->
+    <div class="login-content row min-vh-100 g-0">
+
+        <div class="login-form-container col-12 col-lg-6 offset-lg-6 d-flex align-items-center justify-content-center">
+
+            <div class="login-card card border-0 shadow p-4">
+
+                <div class="login-logo d-flex align-items-center justify-content-center gap-3 mb-4">
+                    <img src="assets/logo.png" alt="Logo HikeRent">
+                    <h2 class="fw-bold mb-0">HikeRent</h2>
+                </div>
+
+                <div class="login-heading mb-4">
+                    <h4 class="fw-bold">Login ke Sistem</h4>
+                    <p class="text-secondary">
+                        Gunakan akun staff untuk mengelola penyewaan.
+                    </p>
+                </div>
+
+                <form>
+                    <div class="form-group mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="form-control"
+                            placeholder="Masukkan email"
+                            autocomplete="username"
+                            required>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="password" class="form-label">Password</label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-control"
+                            placeholder="Masukkan password"
+                            autocomplete="password"
+                            required>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="login-button btn btn-success w-100"
+                        (click)="onLogin()">
+                        Login
+                    </button>
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

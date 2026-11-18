@@ -1,0 +1,109 @@
+
+/* Halaman login */
+.login-page {
+    position: relative;
+    min-height: 100vh;
+    width: 100%;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Background memenuhi seluruh layar */
+.login-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: 0;
+}
+
+.login-background img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+/* Konten berada di depan background */
+.login-content {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+}
+
+/* Posisi card login */
+.login-form-container {
+    min-height: 100vh;
+    padding: 30px;
+}
+
+/* Card login */
+.login-card {
+    width: 100%;
+    max-width: 450px;
+    border-radius: 20px;
+    background-color: #ffffff;
+    padding: 30px !important;
+}
+
+
+/* Logo */
+.login-logo img {
+    width: 75px;
+    height: auto;
+}
+
+.login-logo h2 {
+    color: #14532d;
+    margin-bottom: 0;
+}
+
+/* Heading */
+.login-heading h4 {
+    color: #212529;
+}
+
+.login-heading p {
+    color: #6c757d;
+}
+
+/* Form */
+.form-group label {
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-group input {
+    padding: 14px;
+    border-radius: 10px;
+}
+
+/* Tombol login */
+.login-button {
+    background-color: #14532d;
+    border-color: #14532d;
+    padding: 14px;
+    border-radius: 10px;
+}
+
+.login-button:hover {
+    background-color: #166534;
+    border-color: #166534;
+}
+
+/* Tampilan layar kecil */
+@media (max-width: 991px) {
+    .login-background img {
+        object-position: center;
+    }
+
+    .login-form-container {
+        padding: 20px;
+    }
+
+    .login-card {
+        max-width: 480px;
+    }
+}
