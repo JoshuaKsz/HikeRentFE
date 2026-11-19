@@ -1,47 +1,21 @@
+<h2>Log Aktivitas</h2>
+<p>Menampilkan riwayat aktivitas staff pada sistem HikeRent.</p>
 
-<div class="layout" [class.collapsed]="isSidebarCollapsed">
 
-  <!-- Sidebar -->
-  <app-sidebar
-    (collapsedChange)="isSidebarCollapsed = $event">
-  </app-sidebar>
+<!-- Card Aktivitas -->
+<div class="activity-card">
 
-  <!-- Konten Utama -->
-  <div class="content">
+  <!-- Search -->
+  <div class="search-container">
+    <i class="bi bi-search"></i>
 
-    <div class="activity-page">
-
-      <!-- Header -->
-      <div class="activity-header">
-        <h2>Log Aktivitas</h2>
-        <p>Menampilkan riwayat aktivitas staff pada sistem HikeRent.</p>
-      </div>
-
-      <!-- Card Aktivitas -->
-      <div class="activity-card">
-
-        <!-- Search -->
-        <div class="search-container">
-          <i class="bi bi-search"></i>
-
-          <input
-            type="text"
-            class="form-control"
-            placeholder="Cari aktivitas, nama staff, atau ID..."
-            [(ngModel)]="searchText">
-        </div>
-
-        <!-- Data Table -->
-        <app-data-table
-          [title]="table.title"
-          [headers]="table.headers"
-          [data]="filteredActivities">
-        </app-data-table>
-
-      </div>
-
-    </div>
-
+    <input type="text" class="form-control" placeholder="Cari aktivitas, nama staff, atau ID..."
+      [(ngModel)]="searchText">
   </div>
 
+  <!-- Data Table -->
+  <app-data-table [title]="table.title" [headers]="table.headers" [data]="filteredActivities">
+  </app-data-table>
+
 </div>
+

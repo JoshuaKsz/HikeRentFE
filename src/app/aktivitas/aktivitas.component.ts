@@ -56,36 +56,6 @@ export class AktivitasComponent {
         'Nama Staff': 'Dimas Putra',
         'Aktivitas': 'Mencatat pengembalian RENT001',
         'Tanggal & Waktu': '19 Nov 2026, 09:45'
-      },
-      {
-        'ID': 5,
-        'Nama Staff': 'Andi Pratama',
-        'Aktivitas': 'Mencatat pembayaran RENT001',
-        'Tanggal & Waktu': '19 Nov 2026, 10:00'
-      },
-      {
-        'ID': 6,
-        'Nama Staff': 'Siti Rahma',
-        'Aktivitas': 'Memperbarui data customer',
-        'Tanggal & Waktu': '19 Nov 2026, 10:30'
-      },
-      {
-        'ID': 7,
-        'Nama Staff': 'Budi Santoso',
-        'Aktivitas': 'Memperbarui data alat',
-        'Tanggal & Waktu': '19 Nov 2026, 11:00'
-      },
-      {
-        'ID': 8,
-        'Nama Staff': 'Dimas Putra',
-        'Aktivitas': 'Logout dari sistem',
-        'Tanggal & Waktu': '19 Nov 2026, 11:30'
-      },
-      {
-        'ID': 9,
-        'Nama Staff': 'Dimas Putra',
-        'Aktivitas': 'Logout dari sistem',
-        'Tanggal & Waktu': '19 Nov 2026, 11:30'
       }
     ]
   };
