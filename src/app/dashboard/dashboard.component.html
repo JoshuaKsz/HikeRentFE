@@ -5,23 +5,22 @@
   </app-sidebar>
 
   <div class="content">
-    <nav class="navbar bg-white shadow-sm rounded p-3 mb-4">
-
-      <span class="ms-auto fw-semibold">
-        Admin Dashboard
-      </span>
-    </nav>
+    <app-navbar [username]="username"></app-navbar>
 
     <h3>Dashboard</h3>
-    <p class="text-muted">Selamat datang di dashboard Angular.</p>
+    <p class="text-muted">Ringkasan Operasional penyewaan alat pendakian.</p>
 
     <div class="row g-4">
 
       <div class="col-md-3">
         <div class="card shadow-sm border-0">
           <div class="card-body">
-            <h5>Total Alat</h5>
-            <h2>1</h2>
+            <h6>Total Alat</h6>
+            <h2>
+              <strong>
+                1
+              </strong>
+            </h2>
           </div>
         </div>
       </div>
@@ -29,8 +28,12 @@
       <div class="col-md-3">
         <div class="card shadow-sm border-0">
           <div class="card-body">
-            <h5>Stock Tersedia</h5>
-            <h2>85</h2>
+            <h6>Stock Tersedia</h6>
+            <h2>
+              <strong>
+                85
+              </strong>
+            </h2>
           </div>
         </div>
       </div>
@@ -38,78 +41,93 @@
       <div class="col-md-3">
         <div class="card shadow-sm border-0">
           <div class="card-body">
-            <h5>Rental Aktif</h5>
-            <h2>5</h2>
+            <h6>Rental Aktif</h6>
+            <h2>
+              <strong>
+
+                5
+              </strong>
+            </h2>
           </div>
         </div>
       </div>
       <div class="col-md-3">
         <div class="card shadow-sm border-0">
           <div class="card-body">
-            <h5>Menunggu Pengambilan</h5>
-            <h2>3</h2>
+            <h6>Menunggu Pengambilan</h6>
+            <h2>
+              <strong>
+                3
+              </strong>
+            </h2>
           </div>
         </div>
       </div>
       
 
     </div>
-    <div class="row">
+    <div class="row mt-3">
         <div class="col-md-8">
-            <div class="card shadow-sm border-0 p-3">
-                <h2>Rental Terbaru</h2>
-                <div class="card-body">
-                    <table class="table">
-                        <thead class="table-secondary">
-                            <tr>
-                                <td class="text-center align-middle">Kode Rental</td>
-                                <td class="text-center align-middle">Customer</td>
-                                <td class="text-center align-middle">Tgl Sewa</td>
-                                <td class="text-center align-middle">Tgl kembali</td>
-                                <td class="text-center align-middle">status</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td class="text-center align-middle">RENT001</td>
-                                <td class="text-center align-middle">Andi Pratama</td>
-                                <td class="text-center align-middle">18 Nov 2026</td>
-                                <td class="text-center align-middle">26 Nov 2026</td>
-                                <td class="text-center align-middle">Ongoing</td>
-                            </tr>
-                            <tr>
-                                <td class="text-center align-middle">RENT001</td>
-                                <td class="text-center align-middle">Andi Pratama</td>
-                                <td class="text-center align-middle">18 Nov 2026</td>
-                                <td class="text-center align-middle">26 Nov 2026</td>
-                                <td class="text-center align-middle">Ongoing</td>
-                            </tr>
-                            <tr>
-                                <td class="text-center align-middle">RENT001</td>
-                                <td class="text-center align-middle">Andi Pratama</td>
-                                <td class="text-center align-middle">18 Nov 2026</td>
-                                <td class="text-center align-middle">26 Nov 2026</td>
-                                <td class="text-center align-middle">Ongoing</td>
-                            </tr>
-                            <tr>
-                                <td class="text-center align-middle">RENT001</td>
-                                <td class="text-center align-middle">Andi Pratama</td>
-                                <td class="text-center align-middle">18 Nov 2026</td>
-                                <td class="text-center align-middle">26 Nov 2026</td>
-                                <td class="text-center align-middle">Ongoing</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+          <app-data-table
+          [title]="table.title"
+          [headers]="table.headers"
+          [data]="table.data">
+          </app-data-table>
         </div>
         <div class="col-md-4">
             <div class="card shadow-sm border-0">
                 <div class="card-body">
-                    <h4>Ringkasan Stock Alat</h4>
-                    <p class="fs-5">tersedia     18</p>
-                    <p class="fs-5">perawatan    4</p>
-                    <p class="fs-5">Rusak     2</p>
+                  <h4>
+                    <strong>
+                      Ringkasan Stock Alat
+                    </strong>
+                  </h4>
+                  <div class="d-flex align-items-center border-bottom py-2">
+
+                    <span class="bg-success rounded-circle me-2"
+                          style="width: 8px; height: 8px; flex-shrink: 0;">
+                    </span>
+
+                    <span class="flex-grow-1">
+                      Tersedia
+                    </span>
+
+                    <span class="ms-3 fs-5 fw-bold">
+                        123
+                    </span>
+
+                  </div>
+
+                  <div class="d-flex align-items-center border-bottom py-2">
+
+                    <span class="bg-warning rounded-circle me-2"
+                          style="width: 8px; height: 8px; flex-shrink: 0;">
+                    </span>
+
+                    <span class="flex-grow-1">
+                      Perawatan
+                    </span>
+
+                    <span class="ms-3 fs-5 fw-bold">
+                        4
+                    </span>
+
+                  </div>
+                  <div class="d-flex align-items-center border-bottom py-2">
+
+                      <span class="bg-danger rounded-circle me-2"
+                            style="width: 8px; height: 8px; flex-shrink: 0;">
+                      </span>
+
+                      <span class="flex-grow-1">
+                        Rusak
+                      </span>
+
+                      <span class="ms-3 fs-5 fw-bold">
+                          2
+                      </span>
+
+                  </div>
                 </div>
             </div>
         </div>

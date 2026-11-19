@@ -1,0 +1,32 @@
+<div class="card shadow-sm border-0 p-3">
+    <h2>{{ title }}</h2>
+    <div class="card-body">
+        <table class="table">
+            <thead class="table-secondary">
+                <tr>
+                    <th class="text-center align-middle" *ngFor="let header of headers">
+                        {{ header }}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of data">
+                    <td *ngFor="let header of headers" [ngSwitch]="row[header]" class="text-center align-middle">
+                        @if (header == 'status') {
+                            <div *ngSwitchCase="'Completed'" class="rounded-3 border border-2 border-success bg-success bg-opacity-10">
+                                {{ row[header] }}
+                            </div>
+                            <div *ngSwitchCase="'Ongoing'" class="rounded-3 border border-2 border-warning bg-warning bg-opacity-10">
+                                {{ row[header] }}
+                            </div>
+                            <div *ngSwitchCase="'Failed'" class="rounded-3 border border-2 border-danger bg-danger bg-opacity-10">
+                                {{ row[header] }}
+                            </div>
+                        }
+                        <div *ngSwitchDefault>{{ row[header] }}</div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
