@@ -1,0 +1,76 @@
+
+<div class="layout" [class.collapsed]="isSidebarCollapsed">
+
+  <!-- Sidebar -->
+  <app-sidebar
+    (collapsedChange)="isSidebarCollapsed = $event">
+  </app-sidebar>
+
+  <!-- Konten Utama -->
+  <div class="content">
+
+    <div class="activity-page">
+
+      <!-- Header -->
+      <div class="activity-header">
+        <h2>Log Aktivitas</h2>
+        <p>Menampilkan riwayat aktivitas staff pada sistem HikeRent.</p>
+      </div>
+
+      <!-- Card Aktivitas -->
+      <div class="activity-card">
+
+        <!-- Search -->
+        <div class="search-container">
+          <i class="bi bi-search"></i>
+
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Cari aktivitas, nama staff, atau ID..."
+            [(ngModel)]="searchText">
+        </div>
+
+        <!-- Tabel -->
+        <div class="table-responsive">
+
+          <table class="table activity-table">
+
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nama Staff</th>
+                <th>Aktivitas</th>
+                <th>Tanggal & Waktu</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr *ngFor="let activity of filteredActivities">
+                <td>{{ activity.id }}</td>
+                <td>{{ activity.namaStaff }}</td>
+                <td>{{ activity.aktivitas }}</td>
+                <td>{{ activity.tanggalWaktu }}</td>
+              </tr>
+
+              <!-- Jika data tidak ditemukan -->
+              <tr *ngIf="filteredActivities.length === 0">
+                <td colspan="4" class="text-center no-data">
+                  Aktivitas tidak ditemukan.
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

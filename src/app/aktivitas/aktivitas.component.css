@@ -1,0 +1,131 @@
+
+/* Layout Halaman */
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* Konten Utama */
+.content {
+    flex: 1;
+    min-width: 0;
+    margin-left: 250px;
+    transition: margin-left 0.3s ease;
+}
+
+/* Ketika Sidebar Collapsed */
+.layout.collapsed .content {
+    margin-left: 75px;
+}
+
+/* Halaman Aktivitas */
+.activity-page {
+    padding: 25px 28px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Header */
+.activity-header {
+    margin-bottom: 25px;
+}
+
+.activity-header h2 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 8px;
+}
+
+.activity-header p {
+    font-size: 16px;
+    color: #6c757d;
+    margin-bottom: 0;
+}
+
+/* Card */
+.activity-card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Search */
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 25px;
+}
+
+.search-container i {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+.search-container input {
+    padding-left: 38px;
+    height: 42px;
+    border-radius: 7px;
+}
+
+/* Table */
+.activity-table {
+    width: 100%;
+    margin-bottom: 0;
+    vertical-align: middle;
+}
+
+.activity-table thead th {
+    background-color: #e9ecef;
+    color: #212529;
+    font-weight: 600;
+    padding: 14px;
+    white-space: nowrap;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.activity-table tbody td {
+    padding: 15px 14px;
+    color: #343a40;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.activity-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Data Tidak Ditemukan */
+.no-data {
+    padding: 25px !important;
+    color: #6c757d !important;
+}
+
+/* Tampilan Mobile */
+@media (max-width: 768px) {
+
+    .content {
+        margin-left: 0;
+    }
+
+    .layout.collapsed .content {
+        margin-left: 0;
+    }
+
+    .activity-page {
+        padding: 18px;
+    }
+
+    .activity-card {
+        padding: 15px;
+    }
+
+    .activity-header h2 {
+        font-size: 24px;
+    }
+
+}

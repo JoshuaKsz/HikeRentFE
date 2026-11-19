@@ -1,60 +1,94 @@
 
 <!-- Overlay -->
-<div class="sidebar-overlay"
-     [class.show]="isOpen"
-     (click)="toggleSidebar()">
+<div
+  class="sidebar-overlay"
+  [class.show]="isOpen"
+  (click)="toggleSidebar()">
 </div>
 
-
-
 <!-- Sidebar -->
-<aside class="sidebar"
-       [class.show]="isOpen"
-       [class.collapsed]="isCollapsed">
-  <!-- Hamburger button -->
-  <button class="toggle-btn" (click)="toggleCollapse()">
-    <i class="bi" [ngClass]="isCollapsed ? 'bi-list' : 'bi-list'"></i>
+<aside
+  class="sidebar"
+  [class.show]="isOpen"
+  [class.collapsed]="isCollapsed">
+
+  <!-- Hamburger Button -->
+  <button
+    class="toggle-btn"
+    (click)="toggleCollapse()"
+    type="button">
+
+    <i class="bi bi-list"></i>
+
   </button>
-  <div class="brand d-flex align-items-center justify-content-start">
-    <img src="assets/images/logo.png"
-         alt="Logo"
-         width="80"
-         height="80">
-    <span *ngIf="!isCollapsed" class="text-white">HikeRent</span>
-    <div *ngIf="isCollapsed" class="p-1 mt-1">
-    </div>
+
+  <!-- Brand / Logo -->
+  <div class="brand d-flex align-items-center">
+
+    <img
+      src="assets/images/logo.png"
+      alt="HikeRent Logo">
+
+    <span *ngIf="!isCollapsed" class="text-white">
+      HikeRent
+    </span>
+
   </div>
 
   <!-- Main Menu -->
-  <a *ngFor="let menu of menus"
-     href="javascript:void(0)"
-     class="menu-item"
-     [class.active]="activeMenu === menu.name"
-     (click)="selectMenu(menu.name)"
-     [title]="isCollapsed ? menu.name : ''">
+  <ng-container *ngFor="let menu of mainMenu">
 
-    <i class="bi" [ngClass]="menu.icon"></i>
+    <!-- Garis pemisah sebelum Logout -->
+    <hr *ngIf="menu.name === 'Logout'">
 
-    <span *ngIf="!isCollapsed">{{ menu.name }}</span>
-  </a>
+    <!-- Menu Utama -->
+    <a
+      href="javascript:void(0)"
+      class="menu-item"
+      [class.active]="activeMenu === menu.name"
+      [class.active-parent]="menu.name === 'Data Alat' &&
+        (activeMenu === 'Alat Pendakian' ||
+         activeMenu === 'Kategori & Merek')"
+      (click)="selectMenu(menu.name)"
+      [title]="isCollapsed ? menu.name : ''">
 
-  <hr>
+      <i class="bi" [ngClass]="menu.icon"></i>
 
-  <small class="menu-title" *ngIf="!isCollapsed">
-    PENGATURAN
-  </small>
+      <span *ngIf="!isCollapsed">
+        {{ menu.name }}
+      </span>
 
-  <!-- Settings -->
-  <a *ngFor="let menu of settings"
-     href="javascript:void(0)"
-     class="menu-item"
-     [class.active]="activeMenu === menu.name"
-     (click)="selectMenu(menu.name)"
-     [title]="isCollapsed ? menu.name : ''">
+      <!-- Dropdown Arrow -->
+      <i
+        *ngIf="menu.children.length > 0 && !isCollapsed"
+        class="bi dropdown-icon"
+        [ngClass]="isGearMenuOpen
+          ? 'bi-chevron-down'
+          : 'bi-chevron-right'">
+      </i>
 
-    <i class="bi" [ngClass]="menu.icon"></i>
+    </a>
 
-    <span *ngIf="!isCollapsed">{{ menu.name }}</span>
-  </a>
+    <!-- Submenu Data Alat -->
+    <div
+      class="submenu"
+      *ngIf="menu.children.length > 0 &&
+             isGearMenuOpen &&
+             !isCollapsed">
+
+      <a
+        *ngFor="let child of menu.children"
+        href="javascript:void(0)"
+        class="submenu-item"
+        [class.active]="activeMenu === child.name"
+        (click)="selectSubMenu(child.name)">
+
+        {{ child.name }}
+
+      </a>
+
+    </div>
+
+  </ng-container>
 
 </aside>

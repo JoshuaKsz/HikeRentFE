@@ -1,5 +1,7 @@
+
 import { CommonModule } from '@angular/common';
-import { Component, Output, EventEmitter  } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,36 +11,135 @@ import { Component, Output, EventEmitter  } from '@angular/core';
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
+
   isOpen = false;
-  isCollapsed = false; 
+  isCollapsed = false;
+  isGearMenuOpen = true;
+
   @Output() collapsedChange = new EventEmitter<boolean>();
 
   activeMenu = 'Dashboard';
-  menus = [
-    { name: 'Dashboard', icon: 'bi-house-door' },
-    { name: 'Users', icon: 'bi-people' },
-    { name: 'Analytics', icon: 'bi-bar-chart' },
-    { name: 'Projects', icon: 'bi-folder' }
+
+  mainMenu = [
+    {
+      name: 'Dashboard',
+      icon: 'bi-house-door',
+      children: []
+    },
+    {
+      name: 'Data Alat',
+      icon: 'bi-backpack',
+      children: [
+        { name: 'Alat Pendakian' },
+        { name: 'Kategori & Merek' }
+      ]
+    },
+    {
+      name: 'Customer',
+      icon: 'bi-people',
+      children: []
+    },
+    {
+      name: 'Penyewaan',
+      icon: 'bi-calendar-check',
+      children: []
+    },
+    {
+      name: 'Pengembalian',
+      icon: 'bi-box-seam',
+      children: []
+    },
+    {
+      name: 'Pembayaran',
+      icon: 'bi-credit-card',
+      children: []
+    },
+    {
+      name: 'Aktivitas',
+      icon: 'bi-clock-history',
+      children: []
+    },
+    {
+      name: 'Logout',
+      icon: 'bi-box-arrow-right',
+      children: []
+    }
   ];
 
-  settings = [
-    { name: 'Settings', icon: 'bi-gear' },
-    { name: 'Profile', icon: 'bi-person-circle' },
-    { name: 'Logout', icon: 'bi-box-arrow-right' }
-  ];
+  constructor(private router: Router) {
 
+    // Menyesuaikan menu aktif berdasarkan halaman
+    this.updateActiveMenu();
+
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.updateActiveMenu();
+      }
+    });
+
+  }
+
+  // Menentukan menu aktif berdasarkan URL
+  updateActiveMenu() {
+
+    const currentUrl = this.router.url;
+
+    if (currentUrl.startsWith('/aktivitas')) {
+      this.activeMenu = 'Aktivitas';
+    }
+    else if (currentUrl.startsWith('/dashboard')) {
+      this.activeMenu = 'Dashboard';
+    }
+
+  }
+
+  // Membuka dan menutup sidebar pada tampilan mobile
   toggleSidebar() {
     this.isOpen = !this.isOpen;
   }
 
+  // Memilih menu utama
   selectMenu(name: string) {
+
+    if (name === 'Data Alat') {
+      this.isGearMenuOpen = !this.isGearMenuOpen;
+      return;
+    }
+
+    if (name === 'Logout') {
+      this.logout();
+      return;
+    }
+
+    if (name === 'Dashboard') {
+      this.router.navigate(['/dashboard']);
+    }
+
+    else if (name === 'Aktivitas') {
+      this.router.navigate(['/aktivitas']);
+    }
+
+    this.activeMenu = name;
+    this.isOpen = false;
+
+  }
+
+  // Memilih submenu
+  selectSubMenu(name: string) {
     this.activeMenu = name;
     this.isOpen = false;
   }
 
+  // Memperbesar dan memperkecil sidebar
   toggleCollapse() {
     this.isCollapsed = !this.isCollapsed;
     this.collapsedChange.emit(this.isCollapsed);
+  }
+
+  // Logout dan kembali ke halaman login
+  logout() {
+    this.isOpen = false;
+    this.router.navigate(['/login']);
   }
 
 }
