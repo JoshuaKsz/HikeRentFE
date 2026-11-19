@@ -1,12 +1,12 @@
 
 import { CommonModule } from '@angular/common';
 import { Component, Output, EventEmitter } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterLink],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })

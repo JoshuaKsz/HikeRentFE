@@ -31,41 +31,12 @@
             [(ngModel)]="searchText">
         </div>
 
-        <!-- Tabel -->
-        <div class="table-responsive">
-
-          <table class="table activity-table">
-
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Nama Staff</th>
-                <th>Aktivitas</th>
-                <th>Tanggal & Waktu</th>
-              </tr>
-            </thead>
-
-            <tbody>
-
-              <tr *ngFor="let activity of filteredActivities">
-                <td>{{ activity.id }}</td>
-                <td>{{ activity.namaStaff }}</td>
-                <td>{{ activity.aktivitas }}</td>
-                <td>{{ activity.tanggalWaktu }}</td>
-              </tr>
-
-              <!-- Jika data tidak ditemukan -->
-              <tr *ngIf="filteredActivities.length === 0">
-                <td colspan="4" class="text-center no-data">
-                  Aktivitas tidak ditemukan.
-                </td>
-              </tr>
-
-            </tbody>
-
-          </table>
-
-        </div>
+        <!-- Data Table -->
+        <app-data-table
+          [title]="table.title"
+          [headers]="table.headers"
+          [data]="filteredActivities">
+        </app-data-table>
 
       </div>
 

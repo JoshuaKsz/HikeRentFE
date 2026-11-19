@@ -13,3 +13,5 @@ export class DataTableComponent {
   @Input() data: any[] = [];
   @Input() title: string = '';
 }
+
+

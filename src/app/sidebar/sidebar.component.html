@@ -73,11 +73,12 @@
     <div
       class="submenu"
       *ngIf="menu.children.length > 0 &&
-             isGearMenuOpen &&
-             !isCollapsed">
+            isGearMenuOpen &&
+            !isCollapsed">
 
       <a
         *ngFor="let child of menu.children"
+        [routerLink]="child.name === 'Alat Pendakian' ? '/alatpendakian' : null"
         href="javascript:void(0)"
         class="submenu-item"
         [class.active]="activeMenu === child.name"
