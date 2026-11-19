@@ -2,19 +2,39 @@ import { Routes } from '@angular/router';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { LoginComponent } from './login/login.component';
 import { AktivitasComponent } from './aktivitas/aktivitas.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { CustomerComponent } from './customer/customer.component';
+import { AppComponent } from './app.component';
+import { LayoutComponent } from './layout/layout.component';
 
 export const routes: Routes = [
-    {
-        path: "dashboard",
-        component: DashboardComponent
-    },
     {
         path: "login",
         component: LoginComponent
     },
     {
-        path: 'aktivitas',
-        component: AktivitasComponent
-    }
+        path: "",
+        component: LayoutComponent,
+        // canActivate: [authGuard],
+        children: [
+            {
+                path: "dashboard",
+                component: DashboardComponent
+            },
+            {
+                path: 'aktivitas',
+                component: AktivitasComponent
+            },
+            {
+                path: "customer",
+                component: CustomerComponent
+            },
+            {
+                path: "**",
+                component: NotFoundComponent
+            }
+
+        ]
+    },
 
 ];

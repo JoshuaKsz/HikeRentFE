@@ -1,13 +1,13 @@
-<!-- <div class="layout"
-     [class.sidebar-collapsed]="!isExpanded">
+<div class="app-container layout" [ngClass]="{
+  'sidebar-collapsed': isSidebarCollapsed
+}">
+  <app-sidebar (collapsedChange)="isSidebarCollapsed = $event" ></app-sidebar>
 
-  <app-sidebar
-    [isExpanded]="isExpanded"
-    (toggle)="toggleSidebar()">
-  </app-sidebar>
+  <div class="main-container">
+    <app-navbar [username]="username"></app-navbar>
 
-  <main class="dashboard">
-    <app-dashboard></app-dashboard>
-  </main>
-
-</div> -->
+    <main class="content">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

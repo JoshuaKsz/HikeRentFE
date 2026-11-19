@@ -1,13 +1,32 @@
-.layout {
-  display: flex;
-  min-height: 100vh;
-  width: 100%;
-  overflow-x: hidden;
+.app-container {
+    width: 100%;
+    min-height: 100vh;
 }
 
-.dashboard {
-  flex: 1;
-  min-width: 0;
-  padding: 24px;
-  transition: all 0.3s ease;
+/* Main Content */
+.main-container {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    min-width: 0;
+
+    transition: margin-left 0.3s ease,
+                width 0.3s ease;
+}
+
+/* Ketika Sidebar Collapsed */
+.app-container.sidebar-collapsed .main-container {
+    margin-left: 75px;
+    width: calc(100% - 75px);
+}
+
+/* Content */
+.content {
+    padding: 20px;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+/* Sidebar */
+app-sidebar {
+    display: block;
 }

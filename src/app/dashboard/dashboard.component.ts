@@ -17,7 +17,6 @@ export class DashboardComponent {
     isSidebarCollapsed = false;
 
     username = 'staff';
-
     table = {
       title: "Rental Terbaru",
       headers: [
