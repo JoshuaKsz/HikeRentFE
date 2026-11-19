@@ -1,10 +1,8 @@
-<app-layout [isSidebarCollapsed]="isSidebarCollapsed"></app-layout>
-    <app-sidebar
-      (collapsedChange)="isSidebarCollapsed = $event">
-    </app-sidebar>
-    <div class="content">
-        <app-navbar [username]="username"></app-navbar>
-        
-        <h3>Dashboard</h3>
-    </div>
+<h3>Data Customer</h3>
+<p class="text-muted">Kelola data pelanggan penyewa</p>
 
+<div class="input-group">
+  <input type="text">
+  <button class="right-center">+ Tambahkan Customer</button>
+</div>
+<app-data-table [title]="table.title" [headers]="table.headers" [data]="table.data" class="my-custom-table">

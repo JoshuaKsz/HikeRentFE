@@ -12,7 +12,7 @@ import { NgClass } from '@angular/common';
   styleUrl: './layout.component.css'
 })
 export class LayoutComponent {
-  @Input() isSidebarCollapsed: boolean = true;
+  @Input() isSidebarCollapsed: boolean = false;
   username = 'staff';
   // toggleSidebar() {
   //   this.isSidebarCollapsed = !this.isSidebarCollapsed;

@@ -22,6 +22,14 @@
                             <div *ngSwitchCase="'Failed'" class="rounded-3 border border-2 border-danger bg-danger bg-opacity-10">
                                 {{ row[header] }}
                             </div>
+                        } @else if (header == "aksi") {
+                            <button class="btn btn-sm btn-primary" >
+                                <i class="bi bi-pencil"></i>
+                            </button>
+
+                            <button class="btn btn-sm btn-danger" >
+                                <i class="bi bi-trash"></i>
+                            </button>
                         }
                         <div *ngSwitchDefault>{{ row[header] }}</div>
                     </td>
