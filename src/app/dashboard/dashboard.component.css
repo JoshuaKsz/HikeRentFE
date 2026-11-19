@@ -1,0 +1,123 @@
+
+/* Halaman Dashboard */
+.dashboard-page {
+    padding: 25px 28px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Header Dashboard */
+.dashboard-header {
+    margin-bottom: 25px;
+}
+
+.dashboard-header h3 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #212529;
+    margin-bottom: 8px;
+}
+
+.dashboard-header p {
+    font-size: 16px;
+    margin-bottom: 0;
+}
+
+/* Card Statistik */
+.dashboard-page .card {
+    border-radius: 10px;
+}
+
+.dashboard-page .card-body {
+    padding: 22px;
+}
+
+.dashboard-page .card h6 {
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.dashboard-page .card h2 {
+    font-size: 28px;
+}
+
+/* Icon Statistik */
+.card-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.card-icon i {
+    font-size: 25px;
+}
+
+/* Icon Total Alat - Hijau */
+.icon-total {
+    background-color: #e2f9e5;
+    color: #168b36;
+}
+
+/* Icon Stock - Biru */
+.icon-stock {
+    background-color: #e0f0ff;
+    color: #1674c4;
+}
+
+/* Icon Rental - Oranye */
+.icon-rental {
+    background-color: #fff0d9;
+    color: #ed7900;
+}
+
+/* Icon Menunggu - Merah */
+.icon-pending {
+    background-color: #ffe5e5;
+    color: #dc3545;
+}
+
+/* Ringkasan Stock */
+.stock-item {
+    display: flex;
+    align-items: center;
+    padding: 13px 0;
+    border-bottom: 1px solid #dee2e6;
+    gap: 10px;
+}
+
+.stock-item:last-child {
+    border-bottom: none;
+}
+
+.stock-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.stock-number {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+/* Tampilan Mobile */
+@media (max-width: 768px) {
+
+    .dashboard-page {
+        padding: 18px;
+    }
+
+    .dashboard-header h3 {
+        font-size: 24px;
+    }
+
+    .dashboard-page .card-body {
+        padding: 18px;
+    }
+
+}

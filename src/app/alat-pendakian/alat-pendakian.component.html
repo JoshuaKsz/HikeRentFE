@@ -1,1 +1,117 @@
-<p>alat-pendakian works!</p>
+
+<div class="gear-page">
+
+  <!-- Header -->
+  <div class="gear-header">
+    <h2>Data Alat Pendakian</h2>
+    <p>Kelola data dan ketersediaan alat pendakian HikeRent.</p>
+  </div>
+
+  <!-- Search dan Tambah Alat -->
+  <div class="gear-toolbar">
+
+    <div class="search-container">
+      <i class="bi bi-search"></i>
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Cari nama alat..."
+        [(ngModel)]="searchText">
+    </div>
+
+    <button class="btn btn-success btn-add" (click)="addGear()">
+      <i class="bi bi-plus-lg"></i>
+      Tambah Alat
+    </button>
+
+  </div>
+
+  <!-- Tabel Data Alat -->
+  <div class="gear-card">
+
+    <div class="table-responsive">
+      <table class="table align-middle">
+
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Gambar</th>
+            <th>Nama Alat</th>
+            <th>Kategori</th>
+            <th>Merek</th>
+            <th>Harga/Hari</th>
+            <th class="text-center">Total</th>
+            <th class="text-center">Tersedia</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          <tr *ngFor="let gear of filteredGear; let i = index">
+
+            <td>{{ i + 1 }}</td>
+
+            <td>
+              <div class="gear-image">
+                <img [src]="gear.image" [alt]="gear.name">
+              </div>
+            </td>
+
+            <td class="gear-name">{{ gear.name }}</td>
+
+            <td>{{ gear.category }}</td>
+
+            <td>{{ gear.brand }}</td>
+
+            <td>{{ gear.price }}</td>
+
+            <td class="text-center">{{ gear.total }}</td>
+
+            <td class="text-center">{{ gear.available }}</td>
+
+            <td>
+              <span
+                class="status-badge"
+                [ngClass]="gear.status === 'Aktif' ? 'status-active' : 'status-inactive'">
+                {{ gear.status }}
+              </span>
+            </td>
+
+            <td>
+              <div class="action-buttons">
+
+                <button
+                  class="btn btn-light btn-edit"
+                  title="Edit"
+                  (click)="editGear(gear)">
+                  <i class="bi bi-pencil-fill"></i>
+                </button>
+
+                <button
+                  class="btn btn-danger btn-delete"
+                  title="Hapus"
+                  (click)="deleteGear(gear.id)">
+                  <i class="bi bi-trash-fill"></i>
+                </button>
+
+              </div>
+            </td>
+
+          </tr>
+
+          <tr *ngIf="filteredGear.length === 0">
+            <td colspan="10" class="empty-data">
+              Data alat tidak ditemukan.
+            </td>
+          </tr>
+
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+
+</div>

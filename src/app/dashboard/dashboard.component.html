@@ -1,119 +1,131 @@
-<h3>Dashboard</h3>
-<p class="text-muted">Ringkasan Operasional penyewaan alat pendakian.</p>
 
-<div class="row g-4">
+<div class="dashboard-page">
 
-  <div class="col-md-3">
-    <div class="card shadow-sm border-0">
-      <div class="card-body">
-        <h6>Total Alat</h6>
-        <h2>
-          <strong>
-            1
-          </strong>
-        </h2>
-      </div>
-    </div>
+  <!-- Header Dashboard -->
+  <div class="dashboard-header">
+    <h3>Dashboard</h3>
+    <p class="text-muted">
+      Ringkasan operasional penyewaan alat pendakian.
+    </p>
   </div>
 
-  <div class="col-md-3">
-    <div class="card shadow-sm border-0">
-      <div class="card-body">
-        <h6>Stock Tersedia</h6>
-        <h2>
-          <strong>
-            85
-          </strong>
-        </h2>
-      </div>
-    </div>
-  </div>
+  <!-- Card Statistik -->
+  <div class="row g-3">
 
-  <div class="col-md-3">
-    <div class="card shadow-sm border-0">
-      <div class="card-body">
-        <h6>Rental Aktif</h6>
-        <h2>
-          <strong>
+    <!-- Total Alat -->
+    <div class="col-12 col-md-6 col-xl-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="text-muted">Total Alat</h6>
+            <h2 class="fw-bold mb-0">1</h2>
+          </div>
 
-            5
-          </strong>
-        </h2>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-3">
-    <div class="card shadow-sm border-0">
-      <div class="card-body">
-        <h6>Menunggu Pengambilan</h6>
-        <h2>
-          <strong>
-            3
-          </strong>
-        </h2>
-      </div>
-    </div>
-  </div>
-
-
-</div>
-<div class="row mt-3">
-  <div class="col-md-8">
-    <app-data-table [title]="table.title" [headers]="table.headers" [data]="table.data">
-    </app-data-table>
-  </div>
-  <div class="col-md-4">
-    <div class="card shadow-sm border-0">
-      <div class="card-body">
-        <h4>
-          <strong>
-            Ringkasan Stock Alat
-          </strong>
-        </h4>
-        <div class="d-flex align-items-center border-bottom py-2">
-
-          <span class="bg-success rounded-circle me-2" style="width: 8px; height: 8px; flex-shrink: 0;">
-          </span>
-
-          <span class="flex-grow-1">
-            Tersedia
-          </span>
-
-          <span class="ms-3 fs-5 fw-bold">
-            123
-          </span>
-
-        </div>
-
-        <div class="d-flex align-items-center border-bottom py-2">
-
-          <span class="bg-warning rounded-circle me-2" style="width: 8px; height: 8px; flex-shrink: 0;">
-          </span>
-
-          <span class="flex-grow-1">
-            Perawatan
-          </span>
-
-          <span class="ms-3 fs-5 fw-bold">
-            4
-          </span>
-
-        </div>
-        <div class="d-flex align-items-center border-bottom py-2">
-
-          <span class="bg-danger rounded-circle me-2" style="width: 8px; height: 8px; flex-shrink: 0;">
-          </span>
-
-          <span class="flex-grow-1">
-            Rusak
-          </span>
-
-          <span class="ms-3 fs-5 fw-bold">
-            2
-          </span>
-
+          <div class="card-icon icon-total">
+            <i class="bi bi-backpack3"></i>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Stock Tersedia -->
+    <div class="col-12 col-md-6 col-xl-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="text-muted">Stock Tersedia</h6>
+            <h2 class="fw-bold mb-0">85</h2>
+          </div>
+
+          <div class="card-icon icon-stock">
+            <i class="bi bi-box-seam"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rental Aktif -->
+    <div class="col-12 col-md-6 col-xl-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="text-muted">Rental Aktif</h6>
+            <h2 class="fw-bold mb-0">5</h2>
+          </div>
+
+          <div class="card-icon icon-rental">
+            <i class="bi bi-arrow-repeat"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menunggu Pengambilan -->
+    <div class="col-12 col-md-6 col-xl-3">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <div>
+            <h6 class="text-muted">Menunggu Pengambilan</h6>
+            <h2 class="fw-bold mb-0">3</h2>
+          </div>
+
+          <div class="card-icon icon-pending">
+            <i class="bi bi-clock-history"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
+
+  <!-- Bagian Tabel dan Ringkasan Stok -->
+  <div class="row g-3 mt-2">
+
+    <!-- Tabel Penyewaan -->
+    <div class="col-12 col-xl-8">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+          <app-data-table
+            [title]="table.title"
+            [headers]="table.headers"
+            [data]="table.data">
+          </app-data-table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ringkasan Stock -->
+    <div class="col-12 col-xl-4">
+      <div class="card shadow-sm border-0 h-100">
+        <div class="card-body">
+
+          <h5 class="fw-bold mb-3">Ringkasan Stock Alat</h5>
+
+          <!-- Tersedia -->
+          <div class="stock-item">
+            <span class="stock-dot bg-success"></span>
+            <span class="flex-grow-1">Tersedia</span>
+            <span class="stock-number">123</span>
+          </div>
+
+          <!-- Perawatan -->
+          <div class="stock-item">
+            <span class="stock-dot bg-warning"></span>
+            <span class="flex-grow-1">Perawatan</span>
+            <span class="stock-number">4</span>
+          </div>
+
+          <!-- Rusak -->
+          <div class="stock-item">
+            <span class="stock-dot bg-danger"></span>
+            <span class="flex-grow-1">Rusak</span>
+            <span class="stock-number">2</span>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
 </div>
