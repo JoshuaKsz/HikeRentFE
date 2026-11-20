@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { DataTableComponent } from '../data-table/data-table.component';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { LayoutComponent } from '../layout/layout.component';
+import { CustomerService } from '../services/customer/customer.service';
+import { Customer } from '../shared/types/customer.model';
 
 @Component({
   selector: 'app-customer',
@@ -12,8 +14,25 @@ import { LayoutComponent } from '../layout/layout.component';
   templateUrl: './customer.component.html',
   styleUrl: './customer.component.css'
 })
-export class CustomerComponent {
+export class CustomerComponent implements OnInit {
     @Input() tableClass: string = '';
+    customerSvc = inject(CustomerService);
+  
+    customers: Customer[] = [];
+
+    ngOnInit(): void {
+      this.loadCustomers();
+    }
+
+    loadCustomers(): void {
+      this.customerSvc.getCustomers().subscribe(
+        (response) => {
+        console.log(response);
+        
+        this.customers = response;
+      });
+    }
+
     isExpanded = true;
     isSidebarCollapsed = false;
 
