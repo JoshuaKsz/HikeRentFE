@@ -7,6 +7,7 @@ import { CustomerComponent } from './customer/customer.component';
 import { AppComponent } from './app.component';
 import { LayoutComponent } from './layout/layout.component';
 import { AlatPendakianComponent } from './alat-pendakian/alat-pendakian.component';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -16,7 +17,7 @@ export const routes: Routes = [
     {
         path: "",
         component: LayoutComponent,
-        // canActivate: [authGuard],
+        canActivate: [authGuard],
         children: [
             {
                 path: "dashboard",
