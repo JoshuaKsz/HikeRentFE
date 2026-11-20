@@ -20,98 +20,46 @@ export class CustomerComponent implements OnInit {
   
     customers: Customer[] = [];
 
+    table = {
+      title: "Data Kustomer",
+      headers: [
+        "customerId",
+        "fullName",
+        "email",
+        "phoneNumber",
+        "Adress",
+        "identityNumber",
+        "createdAt",
+        "aksi"
+      ],
+      data: [] as any[]
+    };
+
+
     ngOnInit(): void {
       this.loadCustomers();
     }
 
     loadCustomers(): void {
-      this.customerSvc.getCustomers().subscribe(
-        (response) => {
-        console.log(response);
-        
-        this.customers = response;
+      this.customerSvc.getCustomers().subscribe({
+        next: (response) => {
+          console.log(response);
+          this.table.data = response.map(customer => ({
+            ...customer,
+            aksi: '' // Manual input
+          }));
+        },
+        error: (error) => {
+          console.error('Error loading customers:', error);
+        }
       });
+      console.log(this.table);
     }
 
     isExpanded = true;
     isSidebarCollapsed = false;
 
+
     username = 'staff';
-    table = {
-      title: "Data Kustomer",
-      headers: [
-        "ID",
-        "Nama",
-        "Email",
-        "No. Telepon",
-        "Identitas",
-        "aksi"
-      ],
-      data: [
-        {
-          "ID": "CUST001",
-          "Nama": "Andi Pratama",
-          "Email": "andi.pratama@example.com",
-          "No. Telepon": "081234567890",
-          "Identitas": "3174011205900001",
-          "aksi": ''
-        },
-        {
-          "ID": "CUST002",
-          "Nama": "Siti Rahmawati",
-          "Email": "siti.rahmawati@example.com",
-          "No. Telepon": "081298765432",
-          "Identitas": "3174024508920002",
-          "aksi": ''
-        },
-        {
-          "ID": "CUST003",
-          "Nama": "Budi Santoso",
-          "Email": "budi.santoso@example.com",
-          "No. Telepon": "082112345678",
-          "Identitas": "3174031507880003",
-          "aksi": ''
-        },
-        {
-          "ID": "CUST004",
-          "Nama": "Dewi Anggraini",
-          "Email": "dewi.anggraini@example.com",
-          "No. Telepon": "085712345678",
-          "Identitas": "3174042209950004",
-          "aksi": ''
-        },
-        {
-          "ID": "CUST005",
-          "Nama": "Rizky Firmansyah",
-          "Email": "rizky.firmansyah@example.com",
-          "No. Telepon": "081356789012",
-          "Identitas": "3174051009910005",
-          "aksi": ''
-        },
-        {
-          "ID": "CUST006",
-          "Nama": "Putri Maharani",
-          "Email": "putri.maharani@example.com",
-          "No. Telepon": "082298765432",
-          "Identitas": "3174061808960006",
-          "aksi": ''
-        },
-        {
-          "ID": "CUST007",
-          "Nama": "Fajar Ramadhan",
-          "Email": "fajar.ramadhan@example.com",
-          "No. Telepon": "087812345678",
-          "Identitas": "3174072509930007",
-          "aksi": ''
-        },
-        {
-          "ID": "CUST008",
-          "Nama": "Nadia Safitri",
-          "Email": "nadia.safitri@example.com",
-          "No. Telepon": "081987654321",
-          "Identitas": "3174081408970008",
-          "aksi": ''
-        }
-      ]
-    };
+    
 }

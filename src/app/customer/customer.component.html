@@ -5,35 +5,5 @@
   <input type="text">
   <button class="right-center">+ Tambahkan Customer</button>
 </div>
-<!-- <app-data-table [title]="table.title" [headers]="table.headers" [data]="table.data" class="my-custom-table"> -->
-<h2>Customer List</h2>
-
-<table border="1" cellpadding="10">
-  <thead>
-    <tr>
-      <th>Customer ID</th>
-      <th>Full Name</th>
-      <th>Email</th>
-      <th>Phone Number</th>
-      <th>Address</th>
-      <th>Identity Number</th>
-      <th>Created At</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr *ngFor="let customer of customers">
-      <td>{{ customer.customerId }}</td>
-      <td>{{ customer.fullName }}</td>
-      <td>{{ customer.email || '-' }}</td>
-      <td>{{ customer.phoneNumber }}</td>
-      <td>{{ customer.address || '-' }}</td>
-      <td>{{ customer.identityNumber || '-' }}</td>
-      <td>{{ customer.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
-    </tr>
-
-    <tr *ngIf="customers.length === 0">
-      <td colspan="7">No customers found.</td>
-    </tr>
-  </tbody>
-</table>
+<app-data-table [title]="table.title" [headers]="table.headers" [data]="table.data" class="my-custom-table">
+  

@@ -1,7 +1,8 @@
 
 import { CommonModule } from '@angular/common';
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, inject } from '@angular/core';
 import { Router, NavigationEnd, RouterLink } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -11,6 +12,9 @@ import { Router, NavigationEnd, RouterLink } from '@angular/router';
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
+
+  private authSvc = inject(AuthService);
+  private router = inject(Router);
 
   isOpen = false;
   isCollapsed = false;
@@ -66,7 +70,7 @@ export class SidebarComponent {
     }
   ];
 
-  constructor(private router: Router) {
+  constructor() {
 
     // Menyesuaikan menu aktif berdasarkan halaman
     this.updateActiveMenu();
@@ -138,7 +142,21 @@ export class SidebarComponent {
 
   // Logout dan kembali ke halaman login
   logout() {
+
+    // this.isOpen = false;
+    // this.authSvc.clearToken();
+    // this.router.navigate(['/login']);
+    console.log('Logging out...');
+
+    console.log('Before:', this.authSvc.getToken());
+
+    this.authSvc.clearToken();
+
+    console.log('After:', this.authSvc.getToken());
+
     this.isOpen = false;
+
+    console.log(this.authSvc.getToken());
     this.router.navigate(['/login']);
   }
 
