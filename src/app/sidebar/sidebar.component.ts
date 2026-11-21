@@ -154,23 +154,11 @@ export class SidebarComponent {
     this.collapsedChange.emit(this.isCollapsed);
   }
 
-  // Logout dan kembali ke halaman login
   logout() {
-
-    // this.isOpen = false;
-    // this.authSvc.clearToken();
-    // this.router.navigate(['/login']);
-    console.log('Logging out...');
-
-    console.log('Before:', this.authSvc.getToken());
-
     this.authSvc.clearToken();
-
-    console.log('After:', this.authSvc.getToken());
 
     this.isOpen = false;
 
-    console.log(this.authSvc.getToken());
     this.router.navigate(['/login']);
   }
 

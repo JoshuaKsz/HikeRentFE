@@ -43,7 +43,6 @@ export class CustomerComponent implements OnInit {
     loadCustomers(): void {
       this.customerSvc.getCustomers().subscribe({
         next: (response) => {
-          console.log(response);
           this.table.data = response.map(customer => ({
             ...customer,
             aksi: '' // Manual input
@@ -53,11 +52,9 @@ export class CustomerComponent implements OnInit {
           console.error('Error loading customers:', error);
         }
       });
-      console.log(this.table);
     }
 
     isExpanded = true;
-    isSidebarCollapsed = false;
 
 
     username = 'staff';

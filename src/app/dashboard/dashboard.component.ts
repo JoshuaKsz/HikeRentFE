@@ -14,7 +14,6 @@ import { NavbarComponent } from '../navbar/navbar.component';
 
 export class DashboardComponent {
     isExpanded = true;
-    isSidebarCollapsed = false;
 
     username = 'staff';
     table = {

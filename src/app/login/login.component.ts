@@ -32,8 +32,7 @@ export class LoginComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    console.log("login form", this.loginForm.get("email"));
-    console.log("login form", this.loginForm.get("password"));
+
   }
 
   userForm = new FormGroup({
@@ -49,21 +48,13 @@ export class LoginComponent implements OnInit {
 
   onLoginHandler() {
     const formValue = this.loginForm.value;
-    console.log("form value:", formValue);
 
     this.loginSvc.submitLogin({
       email: formValue.email ?? "",
       password: formValue.password ?? ""
     }).subscribe(
       (response: any) => {
-        console.log('FULL LOGIN RESPONSE:', response);
-        console.log('TOKEN:', response.data.token);
         this.authSvc.setToken(response.data.token);
-        console.log(
-          'TOKEN FROM STORAGE:',
-          this.authSvc.getToken()
-        );
-
         this.router.navigate(['/dashboard']);
       }
     );

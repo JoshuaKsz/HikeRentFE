@@ -20,13 +20,10 @@ export class AuthService {
       console.error('Cannot save an empty token!');
       return;
     }
-    console.log("setting it");
-    console.log("token value:", token);
     localStorage.setItem(
         'auth_token', token
       );
 
-    console.log("token after setting:", this.getToken());
   }
     
     getToken(): string | null {
@@ -42,9 +39,5 @@ export class AuthService {
 
     localStorage.removeItem('auth_token');
 
-    console.log(
-      'Token after logout:',
-      localStorage.getItem('auth_token')
-    );
   }
 }
