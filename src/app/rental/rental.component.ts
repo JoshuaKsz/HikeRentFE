@@ -4,11 +4,10 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { RentalService } from '../services/rental/rental.service';
-
 import {
+  RentalDetailRequest,
   RentalRequest,
-  RentalResponse,
-  RentalDetailRequest
+  RentalResponse
 } from '../shared/types/rental.model';
 
 @Component({
@@ -22,377 +21,236 @@ export class RentalComponent implements OnInit {
 
   private rentalService = inject(RentalService);
 
-  // Data transaksi rental dari Backend
   rentals: RentalResponse[] = [];
 
-  // Status halaman
   isLoading = false;
   isSaving = false;
 
   errorMessage = '';
   successMessage = '';
 
-  // Form rental
+  searchKeyword = '';
+
+  // Form penyewaan
   customerId = 0;
   plannedStartDate = '';
   plannedReturnDate = '';
 
-  // Input alat
+  // Input barang
   gearItemId = 0;
   quantity = 1;
 
-  // Detail alat yang akan disewa
+  // Daftar detail barang yang akan dikirim ke backend
   rentalDetails: RentalDetailRequest[] = [];
 
-  // Pencarian transaksi
-  searchKeyword = '';
-
-  // Detail transaksi yang dipilih
+  // Detail transaksi yang sedang dilihat
   selectedRental: RentalResponse | null = null;
 
-  constructor() {}
-
   ngOnInit(): void {
-    this.getRentals();
+    this.loadRentals();
   }
 
-  // =====================================
-  // MENGAMBIL DATA RENTAL
-  // =====================================
-
-  getRentals(): void {
-
+  // Mengambil daftar rental dari backend
+  loadRentals(): void {
     this.isLoading = true;
     this.errorMessage = '';
 
     this.rentalService.getRentals().subscribe({
-
       next: (response) => {
-
         this.rentals = response.data ?? [];
-
         this.isLoading = false;
-
       },
-
       error: (error) => {
-
-        console.error('Gagal mengambil data rental:', error);
-
-        this.errorMessage =
-          error.error?.message ||
-          'Gagal mengambil data rental. Periksa koneksi Backend.';
-
         this.isLoading = false;
-
+        this.errorMessage =
+          error?.error?.message ||
+          'Gagal mengambil data penyewaan dari server.';
       }
-
     });
-
   }
 
-  // =====================================
-  // FILTER DATA RENTAL
-  // =====================================
-
+  // Filter pencarian transaksi
   get filteredRentals(): RentalResponse[] {
-
-    const keyword = this.searchKeyword.toLowerCase().trim();
+    const keyword = this.searchKeyword.trim().toLowerCase();
 
     if (!keyword) {
       return this.rentals;
     }
 
-    return this.rentals.filter(rental =>
-
-      rental.rentalCode.toLowerCase().includes(keyword) ||
-
-      rental.customerName.toLowerCase().includes(keyword) ||
-
-      rental.status.toLowerCase().includes(keyword) ||
-
-      rental.paymentStatus.toLowerCase().includes(keyword)
-
+    return this.rentals.filter((rental) =>
+      rental.rentalCode?.toLowerCase().includes(keyword) ||
+      rental.customerName?.toLowerCase().includes(keyword) ||
+      rental.status?.toLowerCase().includes(keyword) ||
+      rental.paymentStatus?.toLowerCase().includes(keyword)
     );
-
   }
 
-  // =====================================
-  // STATISTIK
-  // =====================================
-
-  getTotalRental(): number {
-
+  // Statistik berdasarkan data dari backend
+  get totalRentals(): number {
     return this.rentals.length;
-
   }
 
-  getUnpaidRentalCount(): number {
-
+  get ongoingRentals(): number {
     return this.rentals.filter(
-
-      rental => rental.paymentStatus === 'Unpaid'
-
+      rental => rental.status?.toLowerCase() === 'ongoing'
     ).length;
-
   }
 
-  getTotalRentalFee(): number {
-
-    return this.rentals.reduce(
-
-      (total, rental) => total + rental.totalRentalFee,
-
-      0
-
-    );
-
+  get unpaidRentals(): number {
+    return this.rentals.filter(
+      rental => rental.paymentStatus?.toLowerCase() === 'unpaid'
+    ).length;
   }
 
-  // =====================================
-  // MENGHITUNG DURASI TANGGAL
-  // HANYA UNTUK INFORMASI FORM
-  // =====================================
-
-  getRentalDuration(): number {
-
-    if (!this.plannedStartDate || !this.plannedReturnDate) {
-      return 0;
-    }
-
-    const start = new Date(
-      this.plannedStartDate + 'T00:00:00'
-    );
-
-    const end = new Date(
-      this.plannedReturnDate + 'T00:00:00'
-    );
-
-    const difference = end.getTime() - start.getTime();
-
-    if (difference < 0) {
-      return 0;
-    }
-
-    return Math.floor(
-      difference / (1000 * 60 * 60 * 24)
-    ) + 1;
-
-  }
-
-  // =====================================
-  // MENAMBAHKAN ALAT KE FORM
-  // =====================================
-
-  addGear(): void {
-
+  // Menambahkan barang ke detail transaksi
+  addGearDetail(): void {
     this.errorMessage = '';
     this.successMessage = '';
 
-    if (this.gearItemId <= 0) {
-
-      this.errorMessage = 'ID alat harus lebih besar dari 0.';
+    if (!Number.isInteger(this.gearItemId) || this.gearItemId <= 0) {
+      this.errorMessage = 'Gear Item ID harus berupa angka lebih dari 0.';
       return;
-
     }
 
-    if (this.quantity <= 0 || !Number.isInteger(this.quantity)) {
-
-      this.errorMessage = 'Jumlah alat harus berupa bilangan bulat positif.';
+    if (!Number.isInteger(this.quantity) || this.quantity <= 0) {
+      this.errorMessage = 'Jumlah barang minimal 1.';
       return;
-
     }
 
-    const existingGear = this.rentalDetails.find(
-
+    const isDuplicate = this.rentalDetails.some(
       detail => detail.gearItemId === this.gearItemId
-
     );
 
-    if (existingGear) {
-
-      this.errorMessage =
-        'Alat tersebut sudah ditambahkan. Silakan ubah jumlahnya.';
-
+    if (isDuplicate) {
+      this.errorMessage = 'Barang tersebut sudah ditambahkan.';
       return;
-
     }
 
     this.rentalDetails.push({
-
       gearItemId: this.gearItemId,
-
       quantity: this.quantity
-
     });
 
     this.gearItemId = 0;
     this.quantity = 1;
-
   }
 
-  // =====================================
-  // MENGHAPUS ALAT DARI FORM
-  // =====================================
-
-  removeGear(index: number): void {
-
+  // Menghapus barang dari detail transaksi
+  removeGearDetail(index: number): void {
     this.rentalDetails.splice(index, 1);
-
   }
 
-  // =====================================
-  // VALIDASI FORM
-  // =====================================
-
-  validateRental(): boolean {
-
-    if (this.customerId <= 0) {
-
-      this.errorMessage = 'ID customer wajib diisi.';
-      return false;
-
-    }
-
+  // Validasi tanggal di sisi frontend
+  get isDateValid(): boolean {
     if (!this.plannedStartDate || !this.plannedReturnDate) {
-
-      this.errorMessage = 'Tanggal mulai dan pengembalian wajib diisi.';
       return false;
-
     }
 
-    if (this.plannedReturnDate < this.plannedStartDate) {
-
-      this.errorMessage =
-        'Tanggal pengembalian tidak boleh lebih awal dari tanggal mulai sewa.';
-
-      return false;
-
-    }
-
-    if (this.rentalDetails.length === 0) {
-
-      this.errorMessage =
-        'Tambahkan minimal satu alat untuk transaksi rental.';
-
-      return false;
-
-    }
-
-    return true;
-
+    return this.plannedReturnDate >= this.plannedStartDate;
   }
 
-  // =====================================
-  // MENYIMPAN TRANSAKSI RENTAL
-  // =====================================
-
-  saveRental(): void {
-
+  // Mengirim transaksi rental ke backend
+  submitRental(): void {
     this.errorMessage = '';
     this.successMessage = '';
 
-    if (!this.validateRental()) {
+    if (!Number.isInteger(this.customerId) || this.customerId <= 0) {
+      this.errorMessage = 'Customer ID harus berupa angka lebih dari 0.';
+      return;
+    }
+
+    if (!this.plannedStartDate || !this.plannedReturnDate) {
+      this.errorMessage = 'Tanggal mulai dan tanggal pengembalian wajib diisi.';
+      return;
+    }
+
+    if (!this.isDateValid) {
+      this.errorMessage = 'Tanggal pengembalian tidak boleh sebelum tanggal mulai.';
+      return;
+    }
+
+    if (this.rentalDetails.length === 0) {
+      this.errorMessage = 'Tambahkan minimal satu barang yang akan disewa.';
       return;
     }
 
     const request: RentalRequest = {
-
       customerId: this.customerId,
-
       plannedStartDate: this.plannedStartDate,
-
       plannedReturnDate: this.plannedReturnDate,
-
       details: this.rentalDetails.map(detail => ({
-
         gearItemId: detail.gearItemId,
-
         quantity: detail.quantity
-
       }))
-
     };
 
     this.isSaving = true;
 
     this.rentalService.createRental(request).subscribe({
-
       next: (response) => {
-
         this.isSaving = false;
 
-        this.successMessage =
-          response.message || 'Rental berhasil dibuat.';
+        if (response.data) {
+          this.successMessage = 'Transaksi penyewaan berhasil dibuat.';
 
-        // Memperbarui daftar menggunakan data dari Backend
-        this.getRentals();
-
-        // Mengosongkan form
-        this.resetForm();
-
+          // Memuat ulang daftar agar data mengikuti hasil backend
+          this.resetForm();
+          this.loadRentals();
+        } else {
+          this.errorMessage = 'Transaksi berhasil diproses, tetapi data tidak ditemukan.';
+        }
       },
-
       error: (error) => {
-
-        console.error('Gagal menyimpan rental:', error);
-
         this.isSaving = false;
 
         this.errorMessage =
-          error.error?.message ||
-          'Gagal menyimpan rental. Periksa kembali data dan koneksi Backend.';
-
+          error?.error?.message ||
+          this.getValidationError(error) ||
+          'Gagal membuat transaksi penyewaan.';
       }
-
     });
-
   }
 
-  // =====================================
-  // RESET FORM
-  // =====================================
+  // Mengambil pesan validasi dari ASP.NET Core jika tersedia
+  private getValidationError(error: any): string {
+    const errors = error?.error?.errors;
 
+    if (!errors) {
+      return '';
+    }
+
+    const messages = Object.values(errors)
+      .flat()
+      .filter((message): message is string => typeof message === 'string');
+
+    return messages.join(' ');
+  }
+
+  // Mengosongkan form setelah transaksi berhasil
   resetForm(): void {
-
     this.customerId = 0;
-
     this.plannedStartDate = '';
-
     this.plannedReturnDate = '';
 
     this.gearItemId = 0;
-
     this.quantity = 1;
 
     this.rentalDetails = [];
-
   }
 
-  // =====================================
-  // MELIHAT DETAIL TRANSAKSI
-  // =====================================
-
-  viewRentalDetail(rental: RentalResponse): void {
-
+  // Menampilkan detail transaksi
+  showRentalDetail(rental: RentalResponse): void {
     this.selectedRental = rental;
-
   }
 
+  // Menutup detail transaksi
   closeRentalDetail(): void {
-
     this.selectedRental = null;
-
   }
 
-  // =====================================
-  // STATUS RENTAL
-  // =====================================
-
+  // Kelas tampilan status rental
   getStatusClass(status: string): string {
-
-    switch (status.toLowerCase()) {
-
+    switch (status?.toLowerCase()) {
       case 'ongoing':
         return 'status-ongoing';
 
@@ -404,19 +262,12 @@ export class RentalComponent implements OnInit {
 
       default:
         return 'status-default';
-
     }
-
   }
 
-  // =====================================
-  // STATUS PEMBAYARAN
-  // =====================================
-
+  // Kelas tampilan status pembayaran
   getPaymentClass(status: string): string {
-
-    switch (status.toLowerCase()) {
-
+    switch (status?.toLowerCase()) {
       case 'paid':
         return 'payment-paid';
 
@@ -425,9 +276,36 @@ export class RentalComponent implements OnInit {
 
       default:
         return 'payment-default';
-
     }
-
   }
 
+  // Label status agar lebih mudah dibaca
+  getStatusLabel(status: string): string {
+    switch (status?.toLowerCase()) {
+      case 'ongoing':
+        return 'Berlangsung';
+
+      case 'returned':
+        return 'Dikembalikan';
+
+      case 'completed':
+        return 'Selesai';
+
+      default:
+        return status || '-';
+    }
+  }
+
+  getPaymentLabel(status: string): string {
+    switch (status?.toLowerCase()) {
+      case 'paid':
+        return 'Lunas';
+
+      case 'unpaid':
+        return 'Belum Lunas';
+
+      default:
+        return status || '-';
+    }
+  }
 }
