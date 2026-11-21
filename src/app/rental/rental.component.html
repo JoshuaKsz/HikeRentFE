@@ -1,0 +1,715 @@
+
+<div class="rental-page">
+
+  <!-- HEADER -->
+  <div class="rental-header">
+
+    <div>
+      <h2>Manajemen Penyewaan</h2>
+
+      <p>
+        Kelola transaksi penyewaan alat pendakian.
+      </p>
+    </div>
+
+  </div>
+
+  <!-- NOTIFIKASI -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    <i class="bi bi-check-circle me-2"></i>
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    <i class="bi bi-exclamation-circle me-2"></i>
+    {{ errorMessage }}
+  </div>
+
+  <!-- STATISTIK -->
+  <div class="row g-3 statistics">
+
+    <div class="col-md-4">
+
+      <div class="stat-card">
+
+        <div class="stat-icon blue">
+          <i class="bi bi-receipt"></i>
+        </div>
+
+        <p class="stat-label">Total Transaksi</p>
+
+        <h3 class="stat-value">
+          {{ getTotalRental() }}
+        </h3>
+
+      </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+      <div class="stat-card">
+
+        <div class="stat-icon orange">
+          <i class="bi bi-wallet2"></i>
+        </div>
+
+        <p class="stat-label">Belum Dibayar</p>
+
+        <h3 class="stat-value">
+          {{ getUnpaidRentalCount() }}
+        </h3>
+
+      </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+      <div class="stat-card">
+
+        <div class="stat-icon green">
+          <i class="bi bi-cash-stack"></i>
+        </div>
+
+        <p class="stat-label">Total Biaya Rental</p>
+
+        <h3 class="stat-value">
+          {{ getTotalRentalFee() | currency:'IDR':'Rp ':'1.0-0' }}
+        </h3>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- LAYOUT UTAMA -->
+  <div class="rental-layout">
+
+    <!-- ================================= -->
+    <!-- DAFTAR TRANSAKSI -->
+    <!-- ================================= -->
+
+    <section class="content-card">
+
+      <div class="card-heading">
+
+        <div class="heading-title">
+
+          <i class="bi bi-list-ul"></i>
+
+          <div>
+            <h4>Daftar Penyewaan</h4>
+
+            <small>Data transaksi rental</small>
+          </div>
+
+        </div>
+
+        <button
+          type="button"
+          class="btn-outline-custom"
+          (click)="getRentals()"
+          [disabled]="isLoading">
+
+          <i class="bi bi-arrow-clockwise"></i>
+          Refresh
+
+        </button>
+
+      </div>
+
+      <!-- SEARCH -->
+      <div class="search-box">
+
+        <i class="bi bi-search"></i>
+
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Cari kode rental atau customer..."
+          [(ngModel)]="searchKeyword"
+          name="searchKeyword">
+
+      </div>
+
+      <!-- LOADING -->
+      <div *ngIf="isLoading" class="loading-state">
+
+        <div class="spinner-border text-primary"></div>
+
+        <p>Memuat data penyewaan...</p>
+
+      </div>
+
+      <!-- ERROR -->
+      <div
+        *ngIf="!isLoading && errorMessage && rentals.length === 0"
+        class="empty-state">
+
+        <i class="bi bi-exclamation-circle"></i>
+
+        <h5>Data belum dapat dimuat</h5>
+
+        <p>Periksa koneksi Backend dan autentikasi.</p>
+
+        <button
+          type="button"
+          class="btn-outline-custom"
+          (click)="getRentals()">
+
+          Coba Lagi
+
+        </button>
+
+      </div>
+
+      <!-- TABLE -->
+      <div
+        *ngIf="!isLoading && (!errorMessage || rentals.length > 0)"
+        class="table-responsive">
+
+        <table class="table rental-table">
+
+          <thead>
+
+            <tr>
+              <th>No</th>
+              <th>Kode Rental</th>
+              <th>Customer</th>
+              <th>Tanggal Sewa</th>
+              <th>Tanggal Kembali</th>
+              <th>Total Biaya</th>
+              <th>Status</th>
+              <th>Pembayaran</th>
+              <th>Detail</th>
+            </tr>
+
+          </thead>
+
+          <tbody>
+
+            <tr *ngFor="let rental of filteredRentals; let i = index">
+
+              <td>{{ i + 1 }}</td>
+
+              <td>
+                <strong class="rental-code">
+                  {{ rental.rentalCode }}
+                </strong>
+              </td>
+
+              <td>{{ rental.customerName }}</td>
+
+              <td>
+                {{ rental.plannedStartDate | date:'dd/MM/yyyy' }}
+              </td>
+
+              <td>
+                {{ rental.plannedReturnDate | date:'dd/MM/yyyy' }}
+              </td>
+
+              <td class="total-column">
+                {{ rental.grandTotal | currency:'IDR':'Rp ':'1.0-0' }}
+              </td>
+
+              <td>
+                <span
+                  class="status-badge"
+                  [ngClass]="getStatusClass(rental.status)">
+
+                  {{ rental.status }}
+
+                </span>
+              </td>
+
+              <td>
+                <span
+                  class="payment-badge"
+                  [ngClass]="getPaymentClass(rental.paymentStatus)">
+
+                  {{ rental.paymentStatus }}
+
+                </span>
+              </td>
+
+              <td>
+
+                <button
+                  type="button"
+                  class="detail-button"
+                  title="Lihat detail"
+                  (click)="viewRentalDetail(rental)">
+
+                  <i class="bi bi-eye"></i>
+
+                </button>
+
+              </td>
+
+            </tr>
+
+            <tr *ngIf="filteredRentals.length === 0">
+
+              <td colspan="9" class="no-data">
+
+                <i class="bi bi-inbox"></i>
+
+                <p>
+                  {{
+                    rentals.length === 0
+                      ? 'Belum ada transaksi rental.'
+                      : 'Data rental tidak ditemukan.'
+                  }}
+                </p>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </section>
+
+    <!-- ================================= -->
+    <!-- FORM PENYEWAAN BARU -->
+    <!-- ================================= -->
+
+    <section class="content-card">
+
+      <div class="card-heading">
+
+        <div class="heading-title">
+
+          <i class="bi bi-plus-circle"></i>
+
+          <div>
+            <h4>Buat Penyewaan Baru</h4>
+
+            <small>Masukkan informasi transaksi</small>
+          </div>
+
+        </div>
+
+      </div>
+
+      <form (ngSubmit)="saveRental()" #rentalForm="ngForm">
+
+        <!-- CUSTOMER -->
+        <div class="form-group">
+
+          <label for="customerId">
+            ID Customer <span>*</span>
+          </label>
+
+          <input
+            type="number"
+            id="customerId"
+            class="form-control"
+            [(ngModel)]="customerId"
+            name="customerId"
+            min="1"
+            required
+            placeholder="Masukkan ID customer">
+
+        </div>
+
+        <!-- TANGGAL -->
+        <div class="date-grid">
+
+          <div class="form-group">
+
+            <label for="plannedStartDate">
+              Tanggal Mulai Sewa <span>*</span>
+            </label>
+
+            <input
+              type="date"
+              id="plannedStartDate"
+              class="form-control"
+              [(ngModel)]="plannedStartDate"
+              name="plannedStartDate"
+              required>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="plannedReturnDate">
+              Rencana Pengembalian <span>*</span>
+            </label>
+
+            <input
+              type="date"
+              id="plannedReturnDate"
+              class="form-control"
+              [(ngModel)]="plannedReturnDate"
+              name="plannedReturnDate"
+              [min]="plannedStartDate || null"
+              required>
+
+          </div>
+
+        </div>
+
+        <!-- DURASI -->
+        <div class="duration-info">
+
+          <i class="bi bi-calendar-week"></i>
+
+          <span>Durasi penyewaan:</span>
+
+          <strong>
+            {{ getRentalDuration() }} hari
+          </strong>
+
+          <small>
+            (Informasi tanggal, perhitungan resmi oleh Backend)
+          </small>
+
+        </div>
+
+        <div class="section-divider"></div>
+
+        <!-- TAMBAH ALAT -->
+        <div class="gear-heading">
+
+          <i class="bi bi-backpack"></i>
+
+          <h5>Peralatan yang Disewa</h5>
+
+        </div>
+
+        <div class="gear-input-grid">
+
+          <div class="form-group">
+
+            <label for="gearItemId">
+              ID Alat <span>*</span>
+            </label>
+
+            <input
+              type="number"
+              id="gearItemId"
+              class="form-control"
+              [(ngModel)]="gearItemId"
+              name="gearItemId"
+              min="1"
+              placeholder="ID alat">
+
+          </div>
+
+          <div class="form-group">
+
+            <label for="quantity">
+              Jumlah <span>*</span>
+            </label>
+
+            <input
+              type="number"
+              id="quantity"
+              class="form-control"
+              [(ngModel)]="quantity"
+              name="quantity"
+              min="1">
+
+          </div>
+
+          <button
+            type="button"
+            class="btn-primary-custom add-button"
+            (click)="addGear()">
+
+            <i class="bi bi-plus-lg"></i>
+            Tambah
+
+          </button>
+
+        </div>
+
+        <!-- DAFTAR ALAT -->
+        <div class="selected-gear">
+
+          <div class="table-responsive">
+
+            <table class="table gear-table">
+
+              <thead>
+
+                <tr>
+                  <th>No</th>
+                  <th>ID Alat</th>
+                  <th>Jumlah</th>
+                  <th>Aksi</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr
+                  *ngFor="let detail of rentalDetails; let i = index">
+
+                  <td>{{ i + 1 }}</td>
+
+                  <td>{{ detail.gearItemId }}</td>
+
+                  <td>{{ detail.quantity }}</td>
+
+                  <td>
+
+                    <button
+                      type="button"
+                      class="delete-button"
+                      title="Hapus alat"
+                      (click)="removeGear(i)">
+
+                      <i class="bi bi-trash"></i>
+
+                    </button>
+
+                  </td>
+
+                </tr>
+
+                <tr *ngIf="rentalDetails.length === 0">
+
+                  <td colspan="4" class="no-data">
+
+                    Belum ada alat yang ditambahkan.
+
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+        </div>
+
+        <!-- INFORMASI PERHITUNGAN -->
+        <div class="calculation-info">
+
+          <i class="bi bi-info-circle"></i>
+
+          <div>
+
+            <strong>Informasi Perhitungan Rental</strong>
+
+            <p>
+              Total biaya rental dihitung oleh Backend berdasarkan
+              harga harian alat, jumlah alat, dan durasi penyewaan.
+              Stok juga divalidasi oleh Backend saat transaksi disimpan.
+            </p>
+
+          </div>
+
+        </div>
+
+        <!-- TOMBOL -->
+        <div class="form-actions">
+
+          <button
+            type="button"
+            class="btn-cancel"
+            (click)="resetForm()"
+            [disabled]="isSaving">
+
+            <i class="bi bi-arrow-counterclockwise"></i>
+            Reset
+
+          </button>
+
+          <button
+            type="submit"
+            class="btn-save"
+            [disabled]="isSaving">
+
+            <span
+              *ngIf="isSaving"
+              class="spinner-border spinner-border-sm">
+            </span>
+
+            <i
+              *ngIf="!isSaving"
+              class="bi bi-check-circle">
+            </i>
+
+            {{ isSaving ? 'Menyimpan...' : 'Simpan Penyewaan' }}
+
+          </button>
+
+        </div>
+
+      </form>
+
+    </section>
+
+  </div>
+
+  <!-- ================================= -->
+  <!-- DETAIL TRANSAKSI -->
+  <!-- ================================= -->
+
+  <div
+    *ngIf="selectedRental"
+    class="detail-overlay"
+    (click)="closeRentalDetail()">
+
+    <div
+      class="detail-modal"
+      (click)="$event.stopPropagation()">
+
+      <div class="detail-modal-header">
+
+        <div>
+          <h4>Detail Penyewaan</h4>
+
+          <small>{{ selectedRental.rentalCode }}</small>
+        </div>
+
+        <button
+          type="button"
+          class="close-button"
+          (click)="closeRentalDetail()">
+
+          <i class="bi bi-x-lg"></i>
+
+        </button>
+
+      </div>
+
+      <div class="detail-modal-body">
+
+        <div class="detail-information">
+
+          <div>
+            <small>Customer</small>
+            <strong>{{ selectedRental.customerName }}</strong>
+          </div>
+
+          <div>
+            <small>Tanggal Rental</small>
+            <strong>
+              {{ selectedRental.rentalDate | date:'dd/MM/yyyy' }}
+            </strong>
+          </div>
+
+          <div>
+            <small>Mulai Sewa</small>
+            <strong>
+              {{ selectedRental.plannedStartDate | date:'dd/MM/yyyy' }}
+            </strong>
+          </div>
+
+          <div>
+            <small>Rencana Pengembalian</small>
+            <strong>
+              {{ selectedRental.plannedReturnDate | date:'dd/MM/yyyy' }}
+            </strong>
+          </div>
+
+        </div>
+
+        <h5>Daftar Peralatan</h5>
+
+        <div class="table-responsive">
+
+          <table class="table gear-table">
+
+            <thead>
+              <tr>
+                <th>Nama Alat</th>
+                <th>Jumlah</th>
+                <th>Harga/Hari</th>
+                <th>Durasi</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr
+                *ngFor="let detail of selectedRental.details">
+
+                <td>{{ detail.gearName }}</td>
+
+                <td>{{ detail.quantity }}</td>
+
+                <td>
+                  {{ detail.dailyPrice | currency:'IDR':'Rp ':'1.0-0' }}
+                </td>
+
+                <td>{{ detail.rentalDays }} hari</td>
+
+                <td>
+                  {{ detail.subtotal | currency:'IDR':'Rp ':'1.0-0' }}
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+        <div class="total-detail">
+
+          <div>
+            <span>Total Biaya Rental</span>
+
+            <strong>
+              {{ selectedRental.totalRentalFee | currency:'IDR':'Rp ':'1.0-0' }}
+            </strong>
+          </div>
+
+          <div>
+            <span>Denda Keterlambatan</span>
+
+            <strong>
+              {{ selectedRental.totalLateFee | currency:'IDR':'Rp ':'1.0-0' }}
+            </strong>
+          </div>
+
+          <div>
+            <span>Denda Kerusakan</span>
+
+            <strong>
+              {{ selectedRental.totalDamageFee | currency:'IDR':'Rp ':'1.0-0' }}
+            </strong>
+          </div>
+
+          <div>
+            <span>Denda Kehilangan</span>
+
+            <strong>
+              {{ selectedRental.totalLostItemFee | currency:'IDR':'Rp ':'1.0-0' }}
+            </strong>
+          </div>
+
+          <div class="grand-total">
+            <span>Grand Total</span>
+
+            <strong>
+              {{ selectedRental.grandTotal | currency:'IDR':'Rp ':'1.0-0' }}
+            </strong>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

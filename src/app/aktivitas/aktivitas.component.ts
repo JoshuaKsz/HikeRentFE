@@ -38,24 +38,6 @@ export class AktivitasComponent {
         'Nama Staff': 'Andi Pratama',
         'Aktivitas': 'Login ke sistem',
         'Tanggal & Waktu': '19 Nov 2026, 08:15'
-      },
-      {
-        'ID': 2,
-        'Nama Staff': 'Budi Santoso',
-        'Aktivitas': 'Menambahkan alat baru',
-        'Tanggal & Waktu': '19 Nov 2026, 08:30'
-      },
-      {
-        'ID': 3,
-        'Nama Staff': 'Siti Rahma',
-        'Aktivitas': 'Membuat penyewaan RENT001',
-        'Tanggal & Waktu': '19 Nov 2026, 09:10'
-      },
-      {
-        'ID': 4,
-        'Nama Staff': 'Dimas Putra',
-        'Aktivitas': 'Mencatat pengembalian RENT001',
-        'Tanggal & Waktu': '19 Nov 2026, 09:45'
       }
     ]
   };

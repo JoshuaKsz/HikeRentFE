@@ -1,0 +1,366 @@
+
+<div class="return-page">
+
+  <div class="return-header">
+    <h2>Pengembalian</h2>
+    <p>Kelola pengembalian alat pendakian dan biaya keterlambatan, kerusakan, serta kehilangan.</p>
+  </div>
+
+  <div class="row g-3">
+
+    <div class="col-lg-5">
+
+      <div class="return-card">
+
+        <div class="card-title">
+          <i class="bi bi-calendar-check"></i>
+          <h5>Daftar Penyewaan</h5>
+        </div>
+
+        <hr>
+
+        <div class="row g-2 mb-3">
+
+          <div class="col-md-7">
+            <div class="search-container">
+              <i class="bi bi-search"></i>
+
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Cari kode rental atau nama customer..."
+                [(ngModel)]="searchText"
+                name="searchText">
+            </div>
+          </div>
+
+          <div class="col-md-5">
+            <select
+              class="form-select"
+              [(ngModel)]="statusFilter"
+              name="statusFilter">
+
+              <option value="Semua Status">Semua Status</option>
+              <option value="Menunggu">Menunggu</option>
+              <option value="Diproses">Diproses</option>
+
+            </select>
+          </div>
+
+        </div>
+
+        <div class="table-responsive">
+
+          <table class="table return-table">
+
+            <thead>
+              <tr>
+                <th>Kode Rental</th>
+                <th>Customer</th>
+                <th>Tgl. Kembali</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+
+            <tbody>
+
+              <tr
+                *ngFor="let rental of filteredRentals"
+                [class.selected-row]="selectedRental?.rentalCode === rental.rentalCode">
+
+                <td>
+                  <strong>{{ rental.rentalCode }}</strong>
+                </td>
+
+                <td>{{ rental.customerName }}</td>
+
+                <td>{{ rental.returnDate | date:'dd MMM yyyy' }}</td>
+
+                <td>
+                  <span
+                    class="status-badge"
+                    [ngClass]="{
+                      'status-waiting': rental.status === 'Menunggu',
+                      'status-process': rental.status === 'Diproses'
+                    }">
+                    {{ rental.status }}
+                  </span>
+                </td>
+
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-sm btn-process"
+                    (click)="selectRental(rental)">
+
+                    Proses
+                    <i class="bi bi-chevron-right"></i>
+
+                  </button>
+                </td>
+
+              </tr>
+
+              <tr *ngIf="filteredRentals.length === 0">
+                <td colspan="5" class="text-center no-data">
+                  Data penyewaan tidak ditemukan.
+                </td>
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="col-lg-7">
+
+      <div class="return-card">
+
+        <div class="card-title">
+          <i class="bi bi-file-earmark-text"></i>
+          <h5>Form Pengembalian</h5>
+        </div>
+
+        <hr>
+
+        <div class="rental-information" *ngIf="selectedRental">
+
+          <div class="row g-2">
+
+            <div class="col-md-6">
+              <div class="info-item">
+                <span>Kode Rental</span>
+                <strong>{{ selectedRental.rentalCode }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span>Customer</span>
+                <strong>{{ selectedRental.customerName }}</strong>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="info-item">
+                <span>Tgl. Kembali</span>
+                <strong>{{ selectedRental.returnDate | date:'dd MMM yyyy' }}</strong>
+              </div>
+
+              <div class="info-item">
+                <span>Total Item</span>
+                <strong>{{ selectedRental.totalItems }} Alat</strong>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="empty-selection" *ngIf="!selectedRental">
+          <i class="bi bi-box-seam"></i>
+          <p>Pilih penyewaan terlebih dahulu untuk memproses pengembalian.</p>
+        </div>
+
+        <div *ngIf="selectedRental">
+
+          <div class="table-responsive mt-3">
+
+            <table class="table return-item-table">
+
+              <thead>
+                <tr>
+                  <th>Nama Alat</th>
+                  <th>Qty Disewa</th>
+                  <th>Qty Kembali</th>
+                  <th>Rusak</th>
+                  <th>Hilang</th>
+                </tr>
+              </thead>
+
+              <tbody>
+
+                <tr *ngFor="let item of selectedRental.items">
+
+                  <td>
+                    <div class="gear-information">
+
+                      <img
+                        [src]="item.itemImage"
+                        [alt]="item.itemName"
+                        class="gear-image">
+
+                        <div>
+                        <strong>{{ item.itemName }}</strong>
+                        <small>RentalDetailId: {{ item.rentalDetailId }}</small>
+                        </div>
+
+                    </div>
+                  </td>
+
+                  <td>
+                    {{ item.quantityRented }}
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      class="form-control quantity-input"
+                      [(ngModel)]="item.quantityReturned"
+                      [name]="'returned-' + item.rentalDetailId"
+                      min="0"
+                      [max]="item.quantityRented">
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      class="form-control quantity-input"
+                      [(ngModel)]="item.damagedQuantity"
+                      [name]="'damaged-' + item.rentalDetailId"
+                      min="0"
+                      [max]="item.quantityRented">
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      class="form-control quantity-input"
+                      [(ngModel)]="item.lostQuantity"
+                      [name]="'lost-' + item.rentalDetailId"
+                      min="0"
+                      [max]="item.quantityRented">
+                  </td>
+
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+          <div class="row g-3 mt-2">
+
+            <div class="col-md-6">
+
+              <div class="form-group mb-3">
+
+                <label>
+                  <i class="bi bi-person"></i>
+                  Petugas
+                </label>
+
+                <select
+                  class="form-select"
+                  [(ngModel)]="selectedUserId"
+                  name="selectedUserId">
+
+                  <option
+                    *ngFor="let staff of staffList"
+                    [ngValue]="staff.userId">
+
+                    {{ staff.fullName }}
+
+                  </option>
+
+                </select>
+
+              </div>
+
+              <div class="form-group mb-3">
+
+                <label>
+                  <i class="bi bi-calendar-event"></i>
+                  Tanggal & Waktu Aktual
+                </label>
+
+                <input
+                  type="datetime-local"
+                  class="form-control"
+                  [(ngModel)]="actualReturnDate"
+                  name="actualReturnDate">
+
+              </div>
+
+              <div class="form-group mb-3">
+
+                <label>
+                  <i class="bi bi-chat-left-text"></i>
+                  Catatan Kondisi
+                </label>
+
+                <textarea
+                  class="form-control"
+                  rows="3"
+                  placeholder="Masukkan catatan pengembalian alat..."
+                  [(ngModel)]="notes"
+                  name="notes">
+                </textarea>
+
+              </div>
+
+            </div>
+
+            <div class="col-md-6">
+
+              <div class="fee-card">
+
+                <div class="fee-title">
+                  <i class="bi bi-coin"></i>
+                  <h5>Rincian Biaya</h5>
+                </div>
+
+                <div class="fee-item">
+                  <span>Denda Terlambat</span>
+                  <strong>{{ totalLateFee | currency:'IDR':'symbol':'1.0-0':'id-ID' }}</strong>
+                </div>
+
+                <div class="fee-item">
+                  <span>Biaya Kerusakan</span>
+                  <strong>{{ totalDamageFee | currency:'IDR':'symbol':'1.0-0':'id-ID' }}</strong>
+                </div>
+
+                <div class="fee-item">
+                  <span>Biaya Kehilangan</span>
+                  <strong>{{ totalLostItemFee | currency:'IDR':'symbol':'1.0-0':'id-ID' }}</strong>
+                </div>
+
+                <div class="fee-total">
+                  <span>Total Biaya</span>
+                  <strong>{{ totalReturnFee | currency:'IDR':'symbol':'1.0-0':'id-ID' }}</strong>
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="d-flex justify-content-end mt-3">
+
+            <button
+              type="button"
+              class="btn btn-save-return"
+              (click)="saveReturn()">
+
+              <i class="bi bi-floppy"></i>
+              Simpan Pengembalian
+
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

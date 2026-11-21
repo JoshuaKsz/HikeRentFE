@@ -1,0 +1,763 @@
+
+/* =====================================
+   RENTAL PAGE
+===================================== */
+
+.rental-page {
+  padding: 26px;
+  min-height: 100vh;
+  background: #f8fafc;
+  color: #1e293b;
+}
+
+.rental-header {
+  margin-bottom: 24px;
+}
+
+.rental-header h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.rental-header p {
+  color: #64748b;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* =====================================
+   STATISTICS
+===================================== */
+
+.statistics {
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  height: 100%;
+  position: relative;
+  transition: 0.2s;
+}
+
+.stat-card:hover {
+  box-shadow: 0 5px 15px rgba(15, 23, 42, 0.06);
+}
+
+.stat-icon {
+  width: 42px;
+  height: 42px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  font-size: 20px;
+  margin-bottom: 14px;
+}
+
+.stat-icon.blue {
+  color: #0866f5;
+  background: #eff6ff;
+}
+
+.stat-icon.orange {
+  color: #d97706;
+  background: #fffbeb;
+}
+
+.stat-icon.green {
+  color: #15803d;
+  background: #f0fdf4;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #64748b;
+  margin-bottom: 7px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: 700;
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+/* =====================================
+   MAIN LAYOUT
+===================================== */
+
+.rental-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.content-card {
+  min-width: 0;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 13px;
+  padding: 21px;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
+}
+
+/* =====================================
+   CARD HEADING
+===================================== */
+
+.card-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-bottom: 17px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.heading-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.heading-title > i {
+  font-size: 23px;
+  color: #0866f5;
+}
+
+.heading-title h4 {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+
+.heading-title small {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+/* =====================================
+   BUTTONS
+===================================== */
+
+.btn-primary-custom,
+.btn-outline-custom,
+.btn-cancel,
+.btn-save {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  white-space: nowrap;
+}
+
+.btn-primary-custom {
+  background: #0866f5;
+  color: #ffffff;
+  border: 1px solid #0866f5;
+}
+
+.btn-primary-custom:hover {
+  background: #0054d6;
+}
+
+.btn-outline-custom {
+  background: #ffffff;
+  color: #0866f5;
+  border: 1px solid #bfdbfe;
+}
+
+.btn-outline-custom:hover {
+  background: #eff6ff;
+}
+
+.btn-cancel {
+  color: #475569;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+}
+
+.btn-cancel:hover {
+  background: #f1f5f9;
+}
+
+.btn-save {
+  color: #ffffff;
+  background: #07852e;
+  border: 1px solid #07852e;
+}
+
+.btn-save:hover {
+  background: #056c25;
+}
+
+.btn-save:disabled,
+.btn-cancel:disabled,
+.btn-outline-custom:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* =====================================
+   SEARCH
+===================================== */
+
+.search-box {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.search-box i {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+}
+
+.search-box input {
+  height: 43px;
+  padding-left: 40px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+/* =====================================
+   FORM
+===================================== */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.form-group label {
+  color: #334155;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-group label span {
+  color: #dc2626;
+}
+
+.form-control {
+  min-height: 43px;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 13px;
+  padding: 9px 12px;
+}
+
+.form-control:focus {
+  border-color: #0866f5;
+  box-shadow: 0 0 0 3px rgba(8, 102, 245, 0.1);
+}
+
+.form-control::placeholder {
+  color: #94a3b8;
+}
+
+.date-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 13px;
+  margin-top: 18px;
+}
+
+/* =====================================
+   DURATION INFO
+===================================== */
+
+.duration-info {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  margin-top: 17px;
+  padding: 12px;
+  background: #eff6ff;
+  color: #1e40af;
+  border-radius: 8px;
+  font-size: 12px;
+}
+
+.duration-info > i {
+  font-size: 17px;
+}
+
+.duration-info strong {
+  color: #0866f5;
+}
+
+.duration-info small {
+  width: 100%;
+  margin-left: 24px;
+  color: #64748b;
+}
+
+/* =====================================
+   DIVIDER
+===================================== */
+
+.section-divider {
+  border-top: 1px solid #edf0f4;
+  margin: 23px 0;
+}
+
+/* =====================================
+   GEAR SECTION
+===================================== */
+
+.gear-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 17px;
+}
+
+.gear-heading i {
+  color: #0866f5;
+  font-size: 22px;
+}
+
+.gear-heading h5 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.gear-input-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 85px auto;
+  align-items: end;
+  gap: 10px;
+}
+
+.add-button {
+  height: 43px;
+}
+
+/* =====================================
+   TABLE
+===================================== */
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.rental-table,
+.gear-table {
+  width: 100%;
+  margin-bottom: 0;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.rental-table thead th,
+.gear-table thead th {
+  background: #f1f5f9;
+  color: #475569;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 13px 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.rental-table tbody td,
+.gear-table tbody td {
+  color: #334155;
+  font-size: 12px;
+  padding: 13px 10px;
+  border-bottom: 1px solid #edf0f4;
+}
+
+.rental-table tbody tr:hover,
+.gear-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.rental-code {
+  color: #1e293b;
+  font-size: 12px;
+}
+
+.total-column {
+  font-weight: 600;
+}
+
+/* =====================================
+   STATUS
+===================================== */
+
+.status-badge,
+.payment-badge {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.status-ongoing {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status-returned {
+  background: #ede9fe;
+  color: #6d28d9;
+}
+
+.status-completed {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-default {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.payment-paid {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.payment-unpaid {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.payment-default {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+/* =====================================
+   DETAIL BUTTON
+===================================== */
+
+.detail-button {
+  width: 34px;
+  height: 33px;
+  background: #ffffff;
+  color: #0866f5;
+  border: 1px solid #bfdbfe;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.detail-button:hover {
+  background: #eff6ff;
+}
+
+.delete-button {
+  border: none;
+  background: transparent;
+  color: #ef4444;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.delete-button:hover {
+  color: #b91c1c;
+}
+
+.no-data {
+  text-align: center;
+  color: #94a3b8 !important;
+  padding: 30px !important;
+}
+
+/* =====================================
+   CALCULATION INFO
+===================================== */
+
+.calculation-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 13px;
+  margin-top: 20px;
+  background: #eff6ff;
+  border: 1px solid #dbeafe;
+  border-radius: 9px;
+  color: #1e40af;
+}
+
+.calculation-info > i {
+  font-size: 19px;
+}
+
+.calculation-info strong {
+  font-size: 12px;
+}
+
+.calculation-info p {
+  color: #64748b;
+  font-size: 11px;
+  line-height: 1.6;
+  margin: 5px 0 0;
+}
+
+/* =====================================
+   FORM ACTIONS
+===================================== */
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 23px;
+}
+
+/* =====================================
+   LOADING AND EMPTY STATE
+===================================== */
+
+.loading-state,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 15px;
+  color: #64748b;
+}
+
+.loading-state p {
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.empty-state > i {
+  font-size: 32px;
+  color: #94a3b8;
+  margin-bottom: 12px;
+}
+
+.empty-state h5 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.empty-state p {
+  font-size: 12px;
+}
+
+/* =====================================
+   DETAIL MODAL
+===================================== */
+
+.detail-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: rgba(15, 23, 42, 0.55);
+}
+
+.detail-modal {
+  width: 100%;
+  max-width: 850px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #ffffff;
+  border-radius: 13px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+.detail-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 23px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.detail-modal-header h4 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 5px;
+}
+
+.detail-modal-header small {
+  color: #64748b;
+}
+
+.close-button {
+  width: 35px;
+  height: 35px;
+  border: none;
+  border-radius: 7px;
+  background: #f1f5f9;
+  color: #475569;
+  cursor: pointer;
+}
+
+.detail-modal-body {
+  padding: 22px;
+}
+
+.detail-modal-body h5 {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 24px 0 15px;
+}
+
+.detail-information {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.detail-information div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.detail-information small {
+  color: #94a3b8;
+  font-size: 11px;
+}
+
+.detail-information strong {
+  color: #334155;
+  font-size: 13px;
+}
+
+.total-detail {
+  margin-top: 22px;
+  padding: 16px;
+  background: #f8fafc;
+  border-radius: 9px;
+}
+
+.total-detail > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 9px 0;
+  font-size: 13px;
+}
+
+.total-detail span {
+  color: #64748b;
+}
+
+.total-detail strong {
+  color: #334155;
+}
+
+.total-detail .grand-total {
+  border-top: 1px solid #cbd5e1;
+  margin-top: 8px;
+  padding-top: 15px;
+  font-size: 15px;
+}
+
+.grand-total strong {
+  color: #0866f5;
+}
+
+/* =====================================
+   ALERT
+===================================== */
+
+.alert {
+  border-radius: 9px;
+  font-size: 13px;
+}
+
+/* =====================================
+   RESPONSIVE
+===================================== */
+
+@media (max-width: 1200px) {
+
+  .rental-layout {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .rental-page {
+    padding: 15px;
+  }
+
+  .rental-header h2 {
+    font-size: 22px;
+  }
+
+  .content-card {
+    padding: 15px;
+  }
+
+  .date-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gear-input-grid {
+    grid-template-columns: 1fr 85px;
+  }
+
+  .add-button {
+    grid-column: 1 / -1;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+
+  .detail-information {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-modal-body {
+    padding: 15px;
+  }
+
+}
+
+@media (max-width: 400px) {
+
+  .gear-input-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .add-button {
+    grid-column: auto;
+    width: 100%;
+  }
+
+}

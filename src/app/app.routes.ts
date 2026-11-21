@@ -8,6 +8,8 @@ import { AppComponent } from './app.component';
 import { LayoutComponent } from './layout/layout.component';
 import { AlatPendakianComponent } from './alat-pendakian/alat-pendakian.component';
 import { authGuard } from './guards/auth.guard';
+import { ReturnRecordsComponent } from './return-records/return-records.component';
+import { RentalComponent } from './rental/rental.component';
 
 export const routes: Routes = [
     {
@@ -34,6 +36,14 @@ export const routes: Routes = [
             {
                 path: 'alatpendakian',
                 component: AlatPendakianComponent
+            },
+            {
+                path: 'pengembalian',
+                component: ReturnRecordsComponent
+            },
+            {
+                path: 'rental',
+                component: RentalComponent
             },
             {
                 path: "**",
