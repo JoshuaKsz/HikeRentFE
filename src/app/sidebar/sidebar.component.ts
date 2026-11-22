@@ -100,8 +100,12 @@ export class SidebarComponent {
     else if (currentUrl.startsWith('/rental')) {
       this.activeMenu = 'Penyewaan';
     }
+    else if (currentUrl.startsWith('/kategori-merek')) {
+      this.activeMenu = 'Kategori & Merek';
+    }
     else if (currentUrl.startsWith('/customer')) {
     this.activeMenu = 'Customer';
+    
   }
 
   }
@@ -151,6 +155,13 @@ export class SidebarComponent {
 
   // Memilih submenu
   selectSubMenu(name: string) {
+
+    if (name === 'Alat Pendakian') {
+      this.router.navigate(['/alatpendakian']);
+    } else if (name === 'Kategori & Merek') {
+      this.router.navigate(['/kategori-merek']);
+    }
+
     this.activeMenu = name;
     this.isOpen = false;
   }

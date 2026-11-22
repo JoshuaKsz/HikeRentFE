@@ -1,1 +1,221 @@
-<p>kategori-merek works!</p>
+
+<div class="category-brand-page">
+  <div class="page-header">
+    <div>
+      <h2>Kategori &amp; Merek</h2>
+      <p>Kelola data kategori alat pendakian dan merek.</p>
+    </div>
+  </div>
+
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <div class="management-grid">
+    <section class="management-card">
+      <div class="card-header">
+        <div>
+          <h3>Data Kategori</h3>
+          <span>{{ categories.length }} kategori</span>
+        </div>
+        <button type="button" class="btn-add" (click)="openCategoryForm()">
+          <span>+</span> Tambah
+        </button>
+      </div>
+
+      <form
+        *ngIf="showCategoryForm"
+        class="data-form"
+        (ngSubmit)="saveCategory()"
+      >
+        <h4>{{ editingCategoryId !== null ? 'Edit Kategori' : 'Tambah Kategori' }}</h4>
+
+        <label for="categoryName">Nama Kategori</label>
+        <input
+          id="categoryName"
+          type="text"
+          name="categoryName"
+          [(ngModel)]="categoryForm.categoryName"
+          placeholder="Contoh: Tenda"
+          required
+        />
+
+        <label for="categoryDescription">Deskripsi</label>
+        <textarea
+          id="categoryDescription"
+          name="categoryDescription"
+          [(ngModel)]="categoryForm.description"
+          placeholder="Deskripsi kategori (opsional)"
+          rows="3"
+        ></textarea>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="closeCategoryForm()">
+            Batal
+          </button>
+          <button type="submit" class="btn-save">
+            Simpan
+          </button>
+        </div>
+      </form>
+
+      <div *ngIf="isLoadingCategories" class="table-message">
+        Memuat data kategori...
+      </div>
+
+      <div class="table-wrapper" *ngIf="!isLoadingCategories">
+        <table>
+          <thead>
+            <tr>
+              <th class="number-column">No</th>
+              <th>Nama Kategori</th>
+              <th class="action-column">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let category of categories; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>
+                <strong>{{ category.categoryName }}</strong>
+                <small *ngIf="category.description">
+                  {{ category.description }}
+                </small>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button
+                    type="button"
+                    class="btn-edit"
+                    title="Edit kategori"
+                    (click)="openCategoryForm(category)"
+                  >
+                    ✎
+                  </button>
+                  <button
+                    type="button"
+                    class="btn-delete"
+                    title="Hapus kategori"
+                    (click)="deleteCategory(category)"
+                  >
+                    ×
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr *ngIf="categories.length === 0">
+              <td colspan="3" class="empty-message">
+                Belum ada data kategori.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="management-card">
+      <div class="card-header">
+        <div>
+          <h3>Data Merek</h3>
+          <span>{{ brands.length }} merek</span>
+        </div>
+        <button type="button" class="btn-add" (click)="openBrandForm()">
+          <span>+</span> Tambah
+        </button>
+      </div>
+
+      <form
+        *ngIf="showBrandForm"
+        class="data-form"
+        (ngSubmit)="saveBrand()"
+      >
+        <h4>{{ editingBrandId !== null ? 'Edit Merek' : 'Tambah Merek' }}</h4>
+
+        <label for="brandName">Nama Merek</label>
+        <input
+          id="brandName"
+          type="text"
+          name="brandName"
+          [(ngModel)]="brandForm.brandName"
+          placeholder="Contoh: Eiger"
+          required
+        />
+
+        <label for="brandDescription">Deskripsi</label>
+        <textarea
+          id="brandDescription"
+          name="brandDescription"
+          [(ngModel)]="brandForm.description"
+          placeholder="Deskripsi merek (opsional)"
+          rows="3"
+        ></textarea>
+
+        <div class="form-actions">
+          <button type="button" class="btn-cancel" (click)="closeBrandForm()">
+            Batal
+          </button>
+          <button type="submit" class="btn-save">
+            Simpan
+          </button>
+        </div>
+      </form>
+
+      <div *ngIf="isLoadingBrands" class="table-message">
+        Memuat data merek...
+      </div>
+
+      <div class="table-wrapper" *ngIf="!isLoadingBrands">
+        <table>
+          <thead>
+            <tr>
+              <th class="number-column">No</th>
+              <th>Nama Merek</th>
+              <th class="action-column">Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let brand of brands; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>
+                <strong>{{ brand.brandName }}</strong>
+                <small *ngIf="brand.description">
+                  {{ brand.description }}
+                </small>
+              </td>
+              <td>
+                <div class="action-buttons">
+                  <button
+                    type="button"
+                    class="btn-edit"
+                    title="Edit merek"
+                    (click)="openBrandForm(brand)"
+                  >
+                    ✎
+                  </button>
+                  <button
+                    type="button"
+                    class="btn-delete"
+                    title="Hapus merek"
+                    (click)="deleteBrand(brand)"
+                  >
+                    ×
+                  </button>
+                </div>
+              </td>
+            </tr>
+
+            <tr *ngIf="brands.length === 0">
+              <td colspan="3" class="empty-message">
+                Belum ada data merek.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</div>
