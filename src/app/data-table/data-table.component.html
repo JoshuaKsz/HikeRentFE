@@ -11,8 +11,13 @@
             </thead>
             <tbody>
                 <tr *ngFor="let row of data">
-                    <td *ngFor="let header of headers" class="text-center align-middle">
-                        @if (header == 'status') {
+                    <td
+                        *ngFor="let header of headers"
+                        class="text-center align-middle"
+                        [class.col-status]="isStatusColumn(header)"
+                        [class.col-action]="isActionColumn(header)"
+                        [attr.title]="(!isStatusColumn(header) && !isActionColumn(header)) ? row[header] : null">
+                        @if (isStatusColumn(header)) {
                             <div
                                 class="rounded-3 border border-2"
                                 [ngClass]="
@@ -26,17 +31,20 @@
                             >
                                 {{ row[header] }}
                             </div>
-                        } @else if (header == "aksi") {
-                            <button class="btn btn-sm btn-primary" (click)="edit.emit(row)">
+                        } @else if (isActionColumn(header)) {
+                            <button class="btn btn-sm me-1 detail-button" (click)="view.emit(row)" title="Detail">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                            <button class="btn btn-sm btn-primary me-1" (click)="edit.emit(row)" title="Edit">
                                 <i class="bi bi-pencil"></i>
                             </button>
-
-                            <button class="btn btn-sm btn-danger" >
+                            <button class="btn btn-sm btn-danger" (click)="delete.emit(row)" title="Hapus">
                                 <i class="bi bi-trash"></i>
                             </button>
-                        } @else
-                        {
-                            {{ row[header] }}   
+                        } @else if (isDateColumn(header)) {
+                            {{ row[header] | date:'dd/MM/yyyy' }}
+                        } @else {
+                            {{ row[header] }}
                         }
                     </td>
                 </tr>

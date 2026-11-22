@@ -16,6 +16,8 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { PaymentComponent } from './payment/payment.component';
 import { TambahCustomerComponent } from './customer/tambah-customer/tambah-customer.component';
 import { EditCustomerComponent } from './customer/edit-customer/edit-customer.component';
+import { DetailCustomerComponent } from './customer/detail-customer/detail-customer.component';
+import { RiwayatComponent } from './customer/detail-customer/riwayat/riwayat.component';
 
 export const routes: Routes = [
     {
@@ -46,6 +48,14 @@ export const routes: Routes = [
             {
                 path: 'customer/edit/:id',
                 component: EditCustomerComponent
+            },
+            {
+                path: 'customer/:id',
+                component: DetailCustomerComponent,
+                children: [
+                    { path: '', redirectTo: 'riwayat', pathMatch: 'full' },
+                    { path: 'riwayat', component: RiwayatComponent }
+                ]
             },
             {
                 path: 'alatpendakian',

@@ -12,7 +12,6 @@ import { ActivityLogService, ActivityLogResponse } from '../services/activity-lo
   imports: [
     CommonModule,
     FormsModule,
-    SidebarComponent,
     DataTableComponent
   ],
   templateUrl: './aktivitas.component.html',
@@ -20,7 +19,6 @@ import { ActivityLogService, ActivityLogResponse } from '../services/activity-lo
 })
 export class AktivitasComponent implements OnInit {
 
-  isSidebarCollapsed = false;
   searchText = '';
 
   activitySvc = inject(ActivityLogService);
@@ -59,11 +57,10 @@ export class AktivitasComponent implements OnInit {
 
   get filteredActivities() {
     const keyword = this.searchText.toLowerCase().trim();
+    if (!keyword) return this.table.data;
 
     return this.table.data.filter(activity =>
-      Object.values(activity).some(value =>
-        String(value).toLowerCase().includes(keyword)
-      )
+      String(activity['Nama Staff'] ?? '').toLowerCase().includes(keyword)
     );
   }
 

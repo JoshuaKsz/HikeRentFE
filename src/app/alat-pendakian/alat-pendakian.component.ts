@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GearItemService } from '../services/gear-item/gear-item.service';
 import { GearItem } from '../shared/types/gear-item.model';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-alat-pendakian',
@@ -100,5 +101,12 @@ export class AlatPendakianComponent implements OnInit {
       currency: 'IDR',
       maximumFractionDigits: 0
     }).format(value ?? 0);
+  }
+
+  resolveImageUrl(url: string | null | undefined): string | null {
+    if (!url) return null;
+    if (url.startsWith('http') || url.startsWith('assets/')) return url;
+    if (url.startsWith('/uploads/')) return `${environment.apiUrl}${url}`;
+    return url;
   }
 }

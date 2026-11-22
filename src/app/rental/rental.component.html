@@ -80,23 +80,22 @@
 
         <!-- Customer -->
         <div class="form-group">
-          <label for="customerId">Customer ID</label>
-          <select     
+          <label for="customerId">Customer</label>
+          <select
             id="customerId"
             name="customerId"
             class="form-control"
             [(ngModel)]="customerId"
             required>
-          >
-          <option value="" disabled>Select Customer</option>
-
-          <option *ngFor="let customer of customers" [value]="customer.customerId">
-              {{ customer.fullName }} - {{ customer.identityNumber }}
-          </option>
-
+            <option [ngValue]="0" disabled>Pilih customer</option>
+            @for (customer of customers; track customer.customerId) {
+              <option [ngValue]="customer.customerId">
+                {{ customer.fullName }} - {{ customer.identityNumber || '-' }}
+              </option>
+            }
           </select>
           <small class="form-hint">
-            Masukkan ID customer yang terdaftar di backend.
+            Pilih customer yang terdaftar.
           </small>
         </div>
 
@@ -145,19 +144,18 @@
         <div class="gear-input-grid">
 
           <div class="form-group">
-            <label for="gearItemId">Gear Item</label>
+            <label for="gearItemId">Peralatan</label>
             <select
-                id="gearItemId"
-                name="gearItemId"
-                class="form-control"
-                [(ngModel)]="gearItemId"
-                >
-
-                <option value="" disabled selected>Select Gear Item</option>
-
-                <option *ngFor="let gear of gearItems" [value]="gear.gearItemId">
-                    {{ gear.gearItemId }} - {{ gear.gearName }} - totalStock: {{ gear.totalStock }}
+              id="gearItemId"
+              name="gearItemId"
+              class="form-control"
+              [(ngModel)]="gearItemId">
+              <option [ngValue]="0" disabled>Pilih peralatan</option>
+              @for (gear of gearItems; track gear.gearItemId) {
+                <option [ngValue]="gear.gearItemId">
+                  {{ gear.gearName }} (Tersedia: {{ gear.availableStock }})
                 </option>
+              }
             </select>
           </div>
 
@@ -188,8 +186,7 @@
           <table class="gear-table">
             <thead>
               <tr>
-                <th>Gear Item ID</th>
-                <th>nama</th>
+                <th>Peralatan</th>
                 <th>Jumlah</th>
                 <th>Aksi</th>
               </tr>
@@ -197,8 +194,7 @@
 
             <tbody>
               <tr *ngFor="let detail of rentalDetails; let i = index">
-                <td>{{ detail.gearItemId }}</td>
-                <td>{{ getGearName(detail.gearItemId) }}</td>
+                <td>{{ detail.gearName }}</td>
                 <td>{{ detail.quantity }}</td>
                 <td>
                   <button

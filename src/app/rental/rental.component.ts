@@ -24,14 +24,13 @@ import { Customer } from '../shared/types/customer.model';
 export class RentalComponent implements OnInit {
 
   private rentalService = inject(RentalService);
-  private gearItemSvc = inject(GearItemService);
-  private customerSvc = inject(CustomerService);
-
-  gearItems: GearItem[] = [];
+  private customerService = inject(CustomerService);
+  private gearItemService = inject(GearItemService);
 
   rentals: RentalResponse[] = [];
-
   customers: Customer[] = [];
+  gearItems: GearItem[] = [];
+
   
   isLoading = false;
   isSaving = false;
@@ -50,8 +49,8 @@ export class RentalComponent implements OnInit {
   gearItemId: number | null = null;
   quantity = 1;
 
-  // Daftar detail barang yang akan dikirim ke backend
-  rentalDetails: RentalDetailRequest[] = [];
+  // Daftar detail barang yang akan dikirim ke backend (plus nama untuk tampilan)
+  rentalDetails: (RentalDetailRequest & { gearName?: string })[] = [];
 
   
   // Detail transaksi yang sedang dilihat
@@ -59,12 +58,13 @@ export class RentalComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadRentals();
-    this.loadGearItems();
     this.loadCustomers();
+    this.loadGearItems();
   }
 
+
   loadCustomers(): void {
-    this.customerSvc.getCustomers().subscribe({
+    this.customerService.getCustomers().subscribe({
       next: (response) => {
         this.customers = response;
       },
@@ -74,13 +74,17 @@ export class RentalComponent implements OnInit {
     });
   }
 
+
   loadGearItems(): void {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.gearItemSvc.getGearItems().subscribe({
+    this.gearItemService.getGearItems().subscribe({
       next: (response) => {
-        this.gearItems = response ?? [];
+        this.gearItems = (response ?? []).filter(
+          g => g.isActive && (g.availableStock ?? 0) > 0
+        );
+
         this.isLoading = false;
       },
       error: (error) => {
@@ -88,10 +92,12 @@ export class RentalComponent implements OnInit {
         this.errorMessage =
           error.error?.message ||
           'Gagal mengambil data alat pendakian.';
+
         this.isLoading = false;
       }
     });
   }
+
 
   
   // Mengambil daftar rental dari backend
@@ -155,6 +161,10 @@ export class RentalComponent implements OnInit {
     ).length;
   }
 
+  getSelectedGear(): GearItem | undefined {
+    return this.gearItems.find(g => g.gearItemId === Number(this.gearItemId));
+  }
+
   // Menambahkan barang ke detail transaksi
   addGearDetail(): void {
     this.errorMessage = '';
@@ -168,6 +178,11 @@ export class RentalComponent implements OnInit {
 
     if (!Number.isInteger(this.gearItemId) || this.gearItemId <= 0) {
       this.errorMessage = 'Gear Item ID harus berupa angka lebih dari 0.';
+    }
+    
+    const gear = this.getSelectedGear();
+    if (!gear) {
+      this.errorMessage = 'Pilih peralatan terlebih dahulu.';
       return;
     }
 
@@ -176,8 +191,13 @@ export class RentalComponent implements OnInit {
       return;
     }
 
+    if (this.quantity > (gear.availableStock ?? 0)) {
+      this.errorMessage = `Jumlah melebihi stok tersedia (${gear.availableStock}).`;
+      return;
+    }
+
     const isDuplicate = this.rentalDetails.some(
-      detail => detail.gearItemId === this.gearItemId
+      detail => detail.gearItemId === gear.gearItemId
     );
 
     if (isDuplicate) {
@@ -186,8 +206,9 @@ export class RentalComponent implements OnInit {
     }
 
     this.rentalDetails.push({
-      gearItemId: this.gearItemId,
-      quantity: this.quantity
+      gearItemId: gear.gearItemId,
+      quantity: this.quantity,
+      gearName: gear.gearName
     });
 
     this.gearItemId = null;
@@ -220,7 +241,7 @@ export class RentalComponent implements OnInit {
     }
 
     if (!Number.isInteger(this.customerId) || this.customerId <= 0) {
-      this.errorMessage = 'Customer ID harus berupa angka lebih dari 0.';
+      this.errorMessage = 'Pilih customer terlebih dahulu.';
       return;
     }
 
@@ -261,6 +282,7 @@ export class RentalComponent implements OnInit {
           // Memuat ulang daftar agar data mengikuti hasil backend
           this.resetForm();
           this.loadRentals();
+          this.loadGearItems();
         } else {
           this.errorMessage = 'Transaksi berhasil diproses, tetapi data tidak ditemukan.';
         }

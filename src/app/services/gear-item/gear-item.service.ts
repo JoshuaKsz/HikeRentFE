@@ -23,12 +23,28 @@ export class GearItemService {
     return this.http.get<GearItem>(`${this.apiUrl}/${id}`);
   }
 
-  createGearItem(request: GearItemRequest): Observable<GearItem> {
-    return this.http.post<GearItem>(this.apiUrl, request);
+  createGearItem(request: GearItemRequest, imageFile?: File | null): Observable<GearItem> {
+    return this.http.post<GearItem>(this.apiUrl, this.toFormData(request, imageFile));
   }
 
-  updateGearItem(id: number, request: GearItemRequest): Observable<GearItem> {
-    return this.http.put<GearItem>(`${this.apiUrl}/${id}`, request);
+  updateGearItem(id: number, request: GearItemRequest, imageFile?: File | null): Observable<GearItem> {
+    return this.http.put<GearItem>(`${this.apiUrl}/${id}`, this.toFormData(request, imageFile));
+  }
+
+  private toFormData(request: GearItemRequest, imageFile?: File | null): FormData {
+    const fd = new FormData();
+    fd.append('categoryId', String(request.categoryId));
+    fd.append('brandId', String(request.brandId));
+    fd.append('gearName', request.gearName);
+    fd.append('description', request.description ?? '');
+    fd.append('dailyPrice', String(request.dailyPrice));
+    fd.append('replacementPrice', String(request.replacementPrice));
+    fd.append('totalStock', String(request.totalStock));
+    fd.append('damagedStock', String(request.damagedStock));
+    fd.append('imageUrl', request.imageUrl ?? '');
+    fd.append('isActive', String(request.isActive));
+    if (imageFile) fd.append('imageFile', imageFile);
+    return fd;
   }
 
   deleteGearItem(id: number): Observable<void> {

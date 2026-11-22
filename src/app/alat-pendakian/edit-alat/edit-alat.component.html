@@ -100,13 +100,22 @@
         </div>
 
         <div class="form-group full-width">
-          <label>URL Gambar</label>
+          <label>Gambar Alat</label>
           <input
-            type="text"
+            #fileInput
+            type="file"
             class="form-control"
-            name="imageUrl"
-            [(ngModel)]="form.imageUrl"
-            maxlength="500">
+            accept="image/jpeg,image/png,image/webp"
+            (change)="onFileSelected($event)">
+          <small class="text-muted">Format: jpg, png, webp. Maks 2MB.</small>
+          @if (previewUrl) {
+            <div class="mt-2">
+              <img [src]="previewUrl" alt="Preview" style="max-height:160px;border-radius:8px;">
+              <div>
+                <button type="button" class="btn-cancel mt-2" (click)="removeImage(fileInput)">Hapus Gambar</button>
+              </div>
+            </div>
+          }
         </div>
 
         <div class="form-group full-width">

@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GearItemService } from '../../services/gear-item/gear-item.service';
 import { GearItemRequest } from '../../shared/types/gear-item.model';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-edit-alat',
@@ -25,6 +26,8 @@ export class EditAlatComponent implements OnInit {
   isLoading = true;
   isSaving = false;
   errorMessage = '';
+  selectedImageFile: File | null = null;
+  previewUrl: string | null = null;
 
   form: GearItemRequest = {
     categoryId: 0,
@@ -83,6 +86,42 @@ export class EditAlatComponent implements OnInit {
     return item.brandName ?? item.name;
   }
 
+  resolveImageUrl(url: string | null | undefined): string | null {
+    if (!url) return null;
+    if (url.startsWith('http') || url.startsWith('assets/')) return url;
+    if (url.startsWith('/uploads/')) return `${environment.apiUrl}${url}`;
+    return url;
+  }
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowed.includes(file.type)) {
+      this.errorMessage = 'Format gambar harus jpg, png, atau webp.';
+      input.value = '';
+      return;
+    }
+    if (file.size > 2 * 1024 * 1024) {
+      this.errorMessage = 'Ukuran gambar maksimal 2MB.';
+      input.value = '';
+      return;
+    }
+    this.errorMessage = '';
+    this.selectedImageFile = file;
+    const reader = new FileReader();
+    reader.onload = () => this.previewUrl = reader.result as string;
+    reader.readAsDataURL(file);
+  }
+
+  removeImage(fileInput?: HTMLInputElement): void {
+    this.selectedImageFile = null;
+    this.previewUrl = null;
+    this.form.imageUrl = null;
+    if (fileInput) fileInput.value = '';
+  }
+
   loadGearItem(): void {
     this.gearItemService.getGearItemById(this.gearItemId).subscribe({
       next: (data) => {
@@ -98,6 +137,7 @@ export class EditAlatComponent implements OnInit {
           imageUrl: data.imageUrl,
           isActive: data.isActive
         };
+        this.previewUrl = this.resolveImageUrl(data.imageUrl);
 
         this.isLoading = false;
       },
@@ -141,7 +181,7 @@ export class EditAlatComponent implements OnInit {
       imageUrl: this.form.imageUrl?.trim() || null
     };
 
-    this.gearItemService.updateGearItem(this.gearItemId, request).subscribe({
+    this.gearItemService.updateGearItem(this.gearItemId, request, this.selectedImageFile).subscribe({
       next: () => {
         this.isSaving = false;
         this.router.navigate(['/alatpendakian']);
