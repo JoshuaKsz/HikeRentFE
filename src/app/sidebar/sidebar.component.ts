@@ -100,6 +100,9 @@ export class SidebarComponent {
     else if (currentUrl.startsWith('/rental')) {
       this.activeMenu = 'Penyewaan';
     }
+    else if (currentUrl.startsWith('/customer')) {
+    this.activeMenu = 'Customer';
+  }
 
   }
 
@@ -131,6 +134,10 @@ export class SidebarComponent {
 
     else if (name === 'Penyewaan') {
       this.router.navigate(['/rental']);
+    }
+
+    else if (name === 'Customer') {
+      this.router.navigate(['/customer']);
     }
 
     else if (name === 'Pengembalian') {

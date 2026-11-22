@@ -1,12 +1,10 @@
 
-/* Halaman Data Alat */
 .gear-page {
     padding: 25px 28px;
     width: 100%;
     box-sizing: border-box;
 }
 
-/* Header */
 .gear-header {
     margin-bottom: 25px;
 }
@@ -24,7 +22,6 @@
     margin-bottom: 0;
 }
 
-/* Toolbar */
 .gear-toolbar {
     display: flex;
     justify-content: space-between;
@@ -33,7 +30,6 @@
     margin-bottom: 25px;
 }
 
-/* Search */
 .search-container {
     position: relative;
     width: 100%;
@@ -56,7 +52,6 @@
     font-size: 16px;
 }
 
-/* Tombol Tambah */
 .btn-add {
     height: 48px;
     padding: 0 25px;
@@ -69,7 +64,6 @@
     margin-right: 8px;
 }
 
-/* Card Tabel */
 .gear-card {
     background: #ffffff;
     padding: 22px;
@@ -77,7 +71,6 @@
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
 }
 
-/* Tabel */
 .gear-card table {
     margin-bottom: 0;
     min-width: 1050px;
@@ -98,12 +91,10 @@
     white-space: nowrap;
 }
 
-/* Nama Alat */
 .gear-name {
     font-weight: 600;
 }
 
-/* Gambar Alat */
 .gear-image {
     width: 70px;
     height: 60px;
@@ -121,7 +112,6 @@
     object-fit: contain;
 }
 
-/* Kolom Total dan Tersedia */
 .gear-card th:nth-child(7),
 .gear-card td:nth-child(7),
 .gear-card th:nth-child(8),
@@ -129,7 +119,6 @@
     text-align: center !important;
 }
 
-/* Status */
 .status-badge {
     display: inline-block;
     padding: 8px 16px;
@@ -148,7 +137,6 @@
     color: #b02a37;
 }
 
-/* Tombol Aksi */
 .action-buttons {
     display: flex;
     align-items: center;
@@ -187,16 +175,13 @@
     background-color: #c82333;
 }
 
-/* Data Kosong */
 .empty-data {
     text-align: center;
     color: #6c757d;
     padding: 30px !important;
 }
 
-/* Tampilan Mobile */
 @media (max-width: 768px) {
-
     .gear-page {
         padding: 18px;
     }
@@ -221,5 +206,4 @@
     .gear-card {
         padding: 12px;
     }
-
 }

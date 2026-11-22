@@ -1,15 +1,11 @@
 
 <div class="gear-page">
-
-  <!-- Header -->
   <div class="gear-header">
     <h2>Data Alat Pendakian</h2>
     <p>Kelola data dan ketersediaan alat pendakian HikeRent.</p>
   </div>
 
-  <!-- Search dan Tambah Alat -->
   <div class="gear-toolbar">
-
     <div class="search-container">
       <i class="bi bi-search"></i>
       <input
@@ -23,15 +19,11 @@
       <i class="bi bi-plus-lg"></i>
       Tambah Alat
     </button>
-
   </div>
 
-  <!-- Tabel Data Alat -->
   <div class="gear-card">
-
     <div class="table-responsive">
       <table class="table align-middle">
-
         <thead>
           <tr>
             <th>No</th>
@@ -48,41 +40,61 @@
         </thead>
 
         <tbody>
+          <tr *ngIf="isLoading">
+            <td colspan="10" class="empty-data">
+              <span class="spinner-border spinner-border-sm me-2"></span>
+              Memuat data alat pendakian...
+            </td>
+          </tr>
+
+          <tr *ngIf="!isLoading && errorMessage">
+            <td colspan="10" class="empty-data text-danger">
+              {{ errorMessage }}
+              <button
+                type="button"
+                class="btn btn-sm btn-outline-secondary ms-2"
+                (click)="loadGearItems()">
+                Coba Lagi
+              </button>
+            </td>
+          </tr>
 
           <tr *ngFor="let gear of filteredGear; let i = index">
-
             <td>{{ i + 1 }}</td>
 
             <td>
               <div class="gear-image">
-                <img [src]="gear.image" [alt]="gear.name">
+                <img
+                  *ngIf="gear.imageUrl"
+                  [src]="gear.imageUrl"
+                  [alt]="gear.gearName">
+
+                <i
+                  *ngIf="!gear.imageUrl"
+                  class="bi bi-image text-secondary">
+                </i>
               </div>
             </td>
 
-            <td class="gear-name">{{ gear.name }}</td>
-
-            <td>{{ gear.category }}</td>
-
-            <td>{{ gear.brand }}</td>
-
-            <td>{{ gear.price }}</td>
-
-            <td class="text-center">{{ gear.total }}</td>
-
-            <td class="text-center">{{ gear.available }}</td>
+            <td class="gear-name">{{ gear.gearName }}</td>
+            <td>{{ gear.categoryName }}</td>
+            <td>{{ gear.brandName }}</td>
+            <td>{{ formatRupiah(gear.dailyPrice) }}</td>
+            <td class="text-center">{{ gear.totalStock }}</td>
+            <td class="text-center">{{ gear.availableStock }}</td>
 
             <td>
               <span
                 class="status-badge"
-                [ngClass]="gear.status === 'Aktif' ? 'status-active' : 'status-inactive'">
-                {{ gear.status }}
+                [ngClass]="gear.isActive ? 'status-active' : 'status-inactive'">
+                {{ gear.isActive ? 'Aktif' : 'Nonaktif' }}
               </span>
             </td>
 
             <td>
               <div class="action-buttons">
-
                 <button
+                  type="button"
                   class="btn btn-light btn-edit"
                   title="Edit"
                   (click)="editGear(gear)">
@@ -90,28 +102,23 @@
                 </button>
 
                 <button
+                  type="button"
                   class="btn btn-danger btn-delete"
                   title="Hapus"
-                  (click)="deleteGear(gear.id)">
+                  (click)="deleteGear(gear.gearItemId)">
                   <i class="bi bi-trash-fill"></i>
                 </button>
-
               </div>
             </td>
-
           </tr>
 
-          <tr *ngIf="filteredGear.length === 0">
+          <tr *ngIf="!isLoading && !errorMessage && filteredGear.length === 0">
             <td colspan="10" class="empty-data">
-              Data alat tidak ditemukan.
+              {{ searchText ? 'Data alat tidak ditemukan.' : 'Belum ada data alat pendakian.' }}
             </td>
           </tr>
-
         </tbody>
-
       </table>
     </div>
-
   </div>
-
 </div>

@@ -10,6 +10,8 @@ import { AlatPendakianComponent } from './alat-pendakian/alat-pendakian.componen
 import { authGuard } from './guards/auth.guard';
 import { ReturnRecordsComponent } from './return-records/return-records.component';
 import { RentalComponent } from './rental/rental.component';
+import { TambahAlatComponent } from './alat-pendakian/tambah-alat/tambah-alat.component';
+import { EditAlatComponent } from './alat-pendakian/edit-alat/edit-alat.component';
 
 export const routes: Routes = [
     {
@@ -36,6 +38,14 @@ export const routes: Routes = [
             {
                 path: 'alatpendakian',
                 component: AlatPendakianComponent
+            },
+            {
+                path: 'alatpendakian/tambah',
+                component: TambahAlatComponent
+            },
+            {
+                path: 'alatpendakian/edit/:id',
+                component: EditAlatComponent
             },
             {
                 path: 'pengembalian',
