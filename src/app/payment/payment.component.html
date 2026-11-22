@@ -1,0 +1,181 @@
+
+<div class="payment-page">
+  <div class="payment-header">
+    <div>
+      <h2>Data Pembayaran</h2>
+      <p>Kelola dan pantau transaksi pembayaran penyewaan alat pendakian.</p>
+    </div>
+  </div>
+
+  <div class="payment-statistics">
+    <div class="stat-card">
+      <div class="stat-icon blue">
+        <i class="bi bi-receipt"></i>
+      </div>
+      <div>
+        <span>Total Transaksi</span>
+        <h3>{{ totalPayments }}</h3>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon green">
+        <i class="bi bi-check-circle"></i>
+      </div>
+      <div>
+        <span>Total Dibayar</span>
+        <h3>{{ formatRupiah(totalPaid) }}</h3>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon orange">
+        <i class="bi bi-clock-history"></i>
+      </div>
+      <div>
+        <span>Total Belum Dibayar</span>
+        <h3>{{ formatRupiah(totalUnpaid) }}</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="payment-card">
+    <div class="payment-toolbar">
+      <div class="search-box">
+        <i class="bi bi-search"></i>
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          placeholder="Cari kode pembayaran, rental, atau customer...">
+      </div>
+
+      <select [(ngModel)]="selectedStatus" class="status-filter">
+        <option value="Semua">Semua Status</option>
+        <option value="Paid">Dibayar</option>
+        <option value="Unpaid">Belum Dibayar</option>
+      </select>
+
+      <button type="button" class="btn-refresh" (click)="loadPayments()">
+        <i class="bi bi-arrow-clockwise"></i>
+        Muat Ulang
+      </button>
+    </div>
+
+    <div *ngIf="isLoading" class="table-message">
+      <span class="spinner-border spinner-border-sm"></span>
+      Memuat data pembayaran...
+    </div>
+
+    <div *ngIf="errorMessage && !isLoading" class="table-message error">
+      {{ errorMessage }}
+      <button type="button" (click)="loadPayments()">Coba Lagi</button>
+    </div>
+
+    <div class="table-responsive" *ngIf="!isLoading && !errorMessage">
+      <table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Kode Pembayaran</th>
+            <th>Kode Rental</th>
+            <th>Customer</th>
+            <th>Jumlah Pembayaran</th>
+            <th>Metode</th>
+            <th>Tanggal</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let payment of filteredPayments; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td class="payment-code">{{ payment.paymentCode }}</td>
+            <td>{{ payment.rentalCode }}</td>
+            <td>{{ payment.customerName }}</td>
+            <td class="amount">
+              {{ formatRupiah(payment.amount) }}
+            </td>
+            <td>{{ payment.paymentMethod }}</td>
+            <td>{{ formatDate(payment.paymentDate) }}</td>
+            <td>
+              <span
+                class="status-badge"
+                [ngClass]="getStatusClass(payment.paymentStatus)">
+                {{ payment.paymentStatus }}
+              </span>
+            </td>
+            <td>
+              <button
+                type="button"
+                class="btn-detail"
+                title="Detail pembayaran"
+                (click)="showDetail(payment)">
+                <i class="bi bi-eye"></i>
+              </button>
+            </td>
+          </tr>
+
+          <tr *ngIf="filteredPayments.length === 0">
+            <td colspan="9" class="empty-message">
+              {{ searchText || selectedStatus !== 'Semua'
+                ? 'Data pembayaran tidak ditemukan.'
+                : 'Belum ada data pembayaran.' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="selectedPayment" (click)="closeDetail()">
+    <div class="detail-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Detail Pembayaran</h3>
+        <button type="button" (click)="closeDetail()">×</button>
+      </div>
+
+      <div class="modal-body" *ngIf="selectedPayment">
+        <div class="detail-row">
+          <span>Kode Pembayaran</span>
+          <strong>{{ selectedPayment.paymentCode }}</strong>
+        </div>
+
+        <div class="detail-row">
+          <span>Kode Rental</span>
+          <strong>{{ selectedPayment.rentalCode }}</strong>
+        </div>
+
+        <div class="detail-row">
+          <span>Customer</span>
+          <strong>{{ selectedPayment.customerName }}</strong>
+        </div>
+
+        <div class="detail-row">
+          <span>Metode Pembayaran</span>
+          <strong>{{ selectedPayment.paymentMethod }}</strong>
+        </div>
+
+        <div class="detail-row">
+          <span>Tanggal Pembayaran</span>
+          <strong>{{ formatDate(selectedPayment.paymentDate) }}</strong>
+        </div>
+
+        <div class="detail-row">
+          <span>Jumlah Pembayaran</span>
+          <strong>{{ formatRupiah(selectedPayment.amount) }}</strong>
+        </div>
+
+        <div class="detail-row">
+          <span>Total Akhir Rental</span>
+          <strong>{{ formatRupiah(selectedPayment.grandTotal) }}</strong>
+        </div>
+
+        <div class="detail-row">
+          <span>Status</span>
+          <strong>{{ selectedPayment.paymentStatus }}</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
