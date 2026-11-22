@@ -9,6 +9,10 @@ import {
   RentalRequest,
   RentalResponse
 } from '../shared/types/rental.model';
+import { GearItem, GearItemApiResponse } from '../shared/types/gear-item.model';
+import { GearItemService } from '../services/gear-item/gear-item.service';
+import { CustomerService } from '../services/customer/customer.service';
+import { Customer } from '../shared/types/customer.model';
 
 @Component({
   selector: 'app-rental',
@@ -20,9 +24,15 @@ import {
 export class RentalComponent implements OnInit {
 
   private rentalService = inject(RentalService);
+  private gearItemSvc = inject(GearItemService);
+  private customerSvc = inject(CustomerService);
+
+  gearItems: GearItem[] = [];
 
   rentals: RentalResponse[] = [];
 
+  customers: Customer[] = [];
+  
   isLoading = false;
   isSaving = false;
 
@@ -37,19 +47,53 @@ export class RentalComponent implements OnInit {
   plannedReturnDate = '';
 
   // Input barang
-  gearItemId = 0;
+  gearItemId: number | null = null;
   quantity = 1;
 
   // Daftar detail barang yang akan dikirim ke backend
   rentalDetails: RentalDetailRequest[] = [];
 
+  
   // Detail transaksi yang sedang dilihat
   selectedRental: RentalResponse | null = null;
 
   ngOnInit(): void {
     this.loadRentals();
+    this.loadGearItems();
+    this.loadCustomers();
   }
 
+  loadCustomers(): void {
+    this.customerSvc.getCustomers().subscribe({
+      next: (response) => {
+        this.customers = response;
+      },
+      error: (error) => {
+        console.error('Error loading customers:', error);
+      }
+    });
+  }
+
+  loadGearItems(): void {
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    this.gearItemSvc.getGearItems().subscribe({
+      next: (response) => {
+        this.gearItems = response ?? [];
+        this.isLoading = false;
+      },
+      error: (error) => {
+        this.gearItems = [];
+        this.errorMessage =
+          error.error?.message ||
+          'Gagal mengambil data alat pendakian.';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  
   // Mengambil daftar rental dari backend
   loadRentals(): void {
     this.isLoading = true;
@@ -69,6 +113,15 @@ export class RentalComponent implements OnInit {
     });
   }
 
+  // cari nama dari Id
+  getGearName(gearItemId: number): string {
+    const gear = this.gearItems.find(
+      g => g.gearItemId === gearItemId
+    );
+
+    return gear ? gear.gearName : 'Unknown Gear';
+  }
+ 
   // Filter pencarian transaksi
   get filteredRentals(): RentalResponse[] {
     const keyword = this.searchKeyword.trim().toLowerCase();
@@ -107,6 +160,12 @@ export class RentalComponent implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
 
+    if (this.gearItemId === null) {
+      alert('Gear Item ID tidak valid.');
+      return;
+    }
+    this.gearItemId = Number(this.gearItemId);
+
     if (!Number.isInteger(this.gearItemId) || this.gearItemId <= 0) {
       this.errorMessage = 'Gear Item ID harus berupa angka lebih dari 0.';
       return;
@@ -131,7 +190,7 @@ export class RentalComponent implements OnInit {
       quantity: this.quantity
     });
 
-    this.gearItemId = 0;
+    this.gearItemId = null;
     this.quantity = 1;
   }
 
@@ -153,6 +212,12 @@ export class RentalComponent implements OnInit {
   submitRental(): void {
     this.errorMessage = '';
     this.successMessage = '';
+
+    this.customerId = Number(this.customerId);
+    if (Number.isNaN(this.customerId)) {
+      this.errorMessage = 'Customer ID harus angka valid.';
+      return;
+    }
 
     if (!Number.isInteger(this.customerId) || this.customerId <= 0) {
       this.errorMessage = 'Customer ID harus berupa angka lebih dari 0.';
@@ -232,7 +297,7 @@ export class RentalComponent implements OnInit {
     this.plannedStartDate = '';
     this.plannedReturnDate = '';
 
-    this.gearItemId = 0;
+    this.gearItemId = null;
     this.quantity = 1;
 
     this.rentalDetails = [];

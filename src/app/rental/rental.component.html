@@ -81,21 +81,25 @@
         <!-- Customer -->
         <div class="form-group">
           <label for="customerId">Customer ID</label>
-          <input
-            type="number"
+          <select     
             id="customerId"
             name="customerId"
             class="form-control"
             [(ngModel)]="customerId"
-            min="1"
-            placeholder="Masukkan Customer ID"
             required>
+          >
+          <option value="" disabled>Select Customer</option>
+
+          <option *ngFor="let customer of customers" [value]="customer.customerId">
+              {{ customer.fullName }} - {{ customer.identityNumber }}
+          </option>
+
+          </select>
           <small class="form-hint">
             Masukkan ID customer yang terdaftar di backend.
           </small>
         </div>
 
-        <!-- Tanggal -->
         <div class="date-grid">
 
           <div class="form-group">
@@ -141,15 +145,20 @@
         <div class="gear-input-grid">
 
           <div class="form-group">
-            <label for="gearItemId">Gear Item ID</label>
-            <input
-              type="number"
-              id="gearItemId"
-              name="gearItemId"
-              class="form-control"
-              [(ngModel)]="gearItemId"
-              min="1"
-              placeholder="ID barang">
+            <label for="gearItemId">Gear Item</label>
+            <select
+                id="gearItemId"
+                name="gearItemId"
+                class="form-control"
+                [(ngModel)]="gearItemId"
+                >
+
+                <option value="" disabled selected>Select Gear Item</option>
+
+                <option *ngFor="let gear of gearItems" [value]="gear.gearItemId">
+                    {{ gear.gearItemId }} - {{ gear.gearName }} - totalStock: {{ gear.totalStock }}
+                </option>
+            </select>
           </div>
 
           <div class="form-group">
@@ -180,6 +189,7 @@
             <thead>
               <tr>
                 <th>Gear Item ID</th>
+                <th>nama</th>
                 <th>Jumlah</th>
                 <th>Aksi</th>
               </tr>
@@ -188,6 +198,7 @@
             <tbody>
               <tr *ngFor="let detail of rentalDetails; let i = index">
                 <td>{{ detail.gearItemId }}</td>
+                <td>{{ getGearName(detail.gearItemId) }}</td>
                 <td>{{ detail.quantity }}</td>
                 <td>
                   <button

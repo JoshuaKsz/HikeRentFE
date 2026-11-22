@@ -94,11 +94,15 @@
                   <button
                     type="button"
                     class="btn btn-sm btn-process"
-                    (click)="selectRental(rental)">
+                    (click)="selectRental(rental)"
+                    [disabled]="rental.status !== 'Ongoing'"
+                    [title]="rental.status !== 'Ongoing'
+                      ? 'Hanya rental Ongoing yang bisa diproses'
+                      : 'Proses pengembalian'">
 
-                    Proses
+                    {{ rental.status === 'Ongoing' ? 'Proses' : 'Tidak tersedia' }}
+
                     <i class="bi bi-chevron-right"></i>
-
                   </button>
                 </td>
 
@@ -295,22 +299,22 @@
 
                 <div class="fee-item">
                   <span>Denda Terlambat</span>
-                  <strong>{{ totalLateFee | currency:'IDR':'symbol':'1.0-0':'id-ID' }}</strong>
+                  <strong>{{ totalLateFee | currency:'IDR':'symbol':'1.0-0'}}</strong>
                 </div>
 
                 <div class="fee-item">
                   <span>Biaya Kerusakan</span>
-                  <strong>{{ totalDamageFee | currency:'IDR':'symbol':'1.0-0':'id-ID' }}</strong>
+                  <strong>{{ totalDamageFee | currency:'IDR':'symbol':'1.0-0' }}</strong>
                 </div>
 
                 <div class="fee-item">
                   <span>Biaya Kehilangan</span>
-                  <strong>{{ totalLostItemFee | currency:'IDR':'symbol':'1.0-0':'id-ID' }}</strong>
+                  <strong>{{ totalLostItemFee | currency:'IDR':'symbol':'1.0-0' }}</strong>
                 </div>
 
                 <div class="fee-total">
                   <span>Total Biaya</span>
-                  <strong>{{ totalReturnFee | currency:'IDR':'symbol':'1.0-0':'id-ID' }}</strong>
+                  <strong>{{ totalReturnFee | currency:'IDR':'symbol':'1.0-0' }}</strong>
                 </div>
 
               </div>

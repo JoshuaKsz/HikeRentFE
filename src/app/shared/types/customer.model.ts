@@ -7,3 +7,4 @@ export type Customer = {
   identityNumber?: string | null;
   createdAt: string;
 };
+

@@ -6,6 +6,7 @@ import { forkJoin } from 'rxjs';
 import { RentalService } from '../services/rental/rental.service';
 import { GearItemService } from '../services/gear-item/gear-item.service';
 import { ReturnRecordService, ReturnRecordRequest, ReturnRecordResponse } from '../services/return-record/return-record.service';
+import { from, concatMap, toArray } from 'rxjs';
 
 interface ReturnItem {
   rentalDetailId: number;
@@ -137,6 +138,12 @@ export class ReturnRecordsComponent implements OnInit {
       return;
     }
 
+    if (this.selectedRental.status !== 'Ongoing') {
+      this.errorMessage =
+        'Pengembalian hanya dapat diproses untuk rental dengan status Ongoing.';
+      return;
+    }
+
     const requests: ReturnRecordRequest[] = [];
 
     for (const item of this.selectedRental.items) {
@@ -157,20 +164,46 @@ export class ReturnRecordsComponent implements OnInit {
       });
     }
 
+    // mengunakan concatMap dari pada fork karena concatMap memangil request secara berutan sedangkan fork mengirimkan secar langsung beberapa rental mengembalian tersebut
     this.isSaving = true;
-    forkJoin(requests.map(req => this.returnSvc.createReturn(req))).subscribe({
+    from(requests).pipe(
+      concatMap(req => this.returnSvc.createReturn(req)),
+      toArray()
+    ).subscribe({
       next: (responses: ReturnRecordResponse[]) => {
-        this.totalLateFee = responses.reduce((s, r) => s + r.lateFee, 0);
-        this.totalDamageFee = responses.reduce((s, r) => s + r.damageFee, 0);
-        this.totalLostItemFee = responses.reduce((s, r) => s + r.lostItemFee, 0);
+        this.totalLateFee = responses.reduce(
+          (sum, r) => sum + r.lateFee, 0
+        );
+
+        this.totalDamageFee = responses.reduce(
+          (sum, r) => sum + r.damageFee, 0
+        );
+
+        this.totalLostItemFee = responses.reduce(
+          (sum, r) => sum + r.lostItemFee, 0
+        );
+
         this.feesVisible = true;
         this.isSaving = false;
-        this.successMessage = 'Data pengembalian berhasil disimpan.';
+
+        this.successMessage =
+          'Data pengembalian berhasil disimpan.';
+
         this.loadRentals();
       },
       error: (err) => {
         this.isSaving = false;
-        this.errorMessage = err?.error?.message || 'Gagal menyimpan data pengembalian.';
+
+        console.error('Error menyimpan pengembalian:', {
+          status: err.status,
+          response: err.error,
+          submittedRequests: requests
+        });
+
+        this.errorMessage =
+          err?.error?.message ||
+          err?.error?.title ||
+          'Gagal menyimpan data pengembalian.';
       }
     });
   }
