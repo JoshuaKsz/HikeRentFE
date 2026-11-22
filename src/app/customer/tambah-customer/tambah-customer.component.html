@@ -1,0 +1,103 @@
+<div class="customer-form-page">
+  <div class="page-header">
+    <div>
+      <h2>Tambah Customer</h2>
+      <p>Tambahkan data pelanggan penyewa baru.</p>
+    </div>
+  </div>
+
+  <div class="form-card">
+    <div class="form-card-header">
+      <h4>Informasi Customer</h4>
+      <p>Lengkapi seluruh informasi pelanggan berikut.</p>
+    </div>
+
+    <form (ngSubmit)="onSubmit()" #customerForm="ngForm">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="fullName">Nama Lengkap</label>
+          <input
+            type="text"
+            id="fullName"
+            name="fullName"
+            [(ngModel)]="customer.fullName"
+            placeholder="Masukkan nama lengkap"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            [(ngModel)]="customer.email"
+            placeholder="contoh@email.com"
+            required
+            email
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="phoneNumber">Nomor Telepon</label>
+          <input
+            type="tel"
+            id="phoneNumber"
+            name="phoneNumber"
+            [(ngModel)]="customer.phoneNumber"
+            placeholder="Masukkan nomor telepon"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="identityNumber">Nomor Identitas</label>
+          <input
+            type="text"
+            id="identityNumber"
+            name="identityNumber"
+            [(ngModel)]="customer.identityNumber"
+            placeholder="Masukkan nomor identitas"
+            required
+          />
+        </div>
+
+        <div class="form-group full-width">
+          <label for="address">Alamat</label>
+          <textarea
+            id="address"
+            name="address"
+            [(ngModel)]="customer.address"
+            placeholder="Masukkan alamat lengkap"
+            rows="4"
+            required
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage">
+        {{ errorMessage }}
+      </div>
+
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn-cancel"
+          (click)="onCancel()"
+          [disabled]="isLoading"
+        >
+          Batal
+        </button>
+
+        <button
+          type="submit"
+          class="btn-submit"
+          [disabled]="customerForm.invalid || isLoading"
+        >
+          {{ isLoading ? 'Menyimpan...' : 'Simpan Customer' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

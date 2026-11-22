@@ -14,6 +14,8 @@ import { EditAlatComponent } from './alat-pendakian/edit-alat/edit-alat.componen
 import { KategoriMerekComponent } from './kategori-merek/kategori-merek.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { PaymentComponent } from './payment/payment.component';
+import { TambahCustomerComponent } from './customer/tambah-customer/tambah-customer.component';
+import { EditCustomerComponent } from './customer/edit-customer/edit-customer.component';
 
 export const routes: Routes = [
     {
@@ -36,6 +38,14 @@ export const routes: Routes = [
             {
                 path: "customer",
                 component: CustomerComponent
+            },
+            {
+                path: 'customer/tambah',
+                component: TambahCustomerComponent
+            },
+            {
+                path: 'customer/edit/:id',
+                component: EditCustomerComponent
             },
             {
                 path: 'alatpendakian',

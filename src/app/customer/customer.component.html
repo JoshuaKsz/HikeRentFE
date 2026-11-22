@@ -3,7 +3,15 @@
 
 <div class="input-group">
   <input type="text">
-  <button class="right-center">+ Tambahkan Customer</button>
+  <button class="right-center" type="button" routerLink="/customer/tambah">
+    + Tambahkan Customer
+  </button>
 </div>
-<app-data-table [title]="table.title" [headers]="table.headers" [data]="table.data" class="my-custom-table">
+<app-data-table
+  [title]="table.title"
+  [headers]="table.headers"
+  [data]="table.data"
+  (edit)="editCustomer($event)"
+  class="my-custom-table">
+</app-data-table>
   

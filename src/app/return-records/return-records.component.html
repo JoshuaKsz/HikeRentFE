@@ -251,30 +251,6 @@
               <div class="form-group mb-3">
 
                 <label>
-                  <i class="bi bi-person"></i>
-                  Petugas
-                </label>
-
-                <select
-                  class="form-select"
-                  [(ngModel)]="selectedUserId"
-                  name="selectedUserId">
-
-                  <option
-                    *ngFor="let staff of staffList"
-                    [ngValue]="staff.userId">
-
-                    {{ staff.fullName }}
-
-                  </option>
-
-                </select>
-
-              </div>
-
-              <div class="form-group mb-3">
-
-                <label>
                   <i class="bi bi-calendar-event"></i>
                   Tanggal & Waktu Aktual
                 </label>

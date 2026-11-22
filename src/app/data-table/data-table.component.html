@@ -27,7 +27,7 @@
                                 {{ row[header] }}
                             </div>
                         } @else if (header == "aksi") {
-                            <button class="btn btn-sm btn-primary" >
+                            <button class="btn btn-sm btn-primary" (click)="edit.emit(row)">
                                 <i class="bi bi-pencil"></i>
                             </button>
 

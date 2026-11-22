@@ -1,5 +1,6 @@
+
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-data-table',
@@ -12,6 +13,6 @@ export class DataTableComponent {
   @Input() headers: string[] = [];
   @Input() data: any[] = [];
   @Input() title: string = '';
+
+  @Output() edit = new EventEmitter<any>();
 }
-
-
