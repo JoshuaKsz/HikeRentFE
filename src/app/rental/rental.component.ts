@@ -4,6 +4,10 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 import { RentalService } from '../services/rental/rental.service';
+import { CustomerService } from '../services/customer/customer.service';
+import { GearItemService } from '../services/gear-item/gear-item.service';
+import { Customer } from '../shared/types/customer.model';
+import { GearItem } from '../shared/types/gear-item.model';
 import {
   RentalDetailRequest,
   RentalRequest,
@@ -20,8 +24,12 @@ import {
 export class RentalComponent implements OnInit {
 
   private rentalService = inject(RentalService);
+  private customerService = inject(CustomerService);
+  private gearItemService = inject(GearItemService);
 
   rentals: RentalResponse[] = [];
+  customers: Customer[] = [];
+  gearItems: GearItem[] = [];
 
   isLoading = false;
   isSaving = false;
@@ -40,14 +48,33 @@ export class RentalComponent implements OnInit {
   gearItemId = 0;
   quantity = 1;
 
-  // Daftar detail barang yang akan dikirim ke backend
-  rentalDetails: RentalDetailRequest[] = [];
+  // Daftar detail barang yang akan dikirim ke backend (plus nama untuk tampilan)
+  rentalDetails: (RentalDetailRequest & { gearName?: string })[] = [];
 
   // Detail transaksi yang sedang dilihat
   selectedRental: RentalResponse | null = null;
 
   ngOnInit(): void {
     this.loadRentals();
+    this.loadCustomers();
+    this.loadGearItems();
+  }
+
+  loadCustomers(): void {
+    this.customerService.getCustomers().subscribe({
+      next: (data) => this.customers = data ?? [],
+      error: () => {}
+    });
+  }
+
+  loadGearItems(): void {
+    this.gearItemService.getGearItems().subscribe({
+      next: (data) => {
+        // Hanya ambil yang aktif dan stok tersedia > 0
+        this.gearItems = (data ?? []).filter(g => g.isActive && (g.availableStock ?? 0) > 0);
+      },
+      error: () => {}
+    });
   }
 
   // Mengambil daftar rental dari backend
@@ -102,13 +129,18 @@ export class RentalComponent implements OnInit {
     ).length;
   }
 
+  getSelectedGear(): GearItem | undefined {
+    return this.gearItems.find(g => g.gearItemId === Number(this.gearItemId));
+  }
+
   // Menambahkan barang ke detail transaksi
   addGearDetail(): void {
     this.errorMessage = '';
     this.successMessage = '';
 
-    if (!Number.isInteger(this.gearItemId) || this.gearItemId <= 0) {
-      this.errorMessage = 'Gear Item ID harus berupa angka lebih dari 0.';
+    const gear = this.getSelectedGear();
+    if (!gear) {
+      this.errorMessage = 'Pilih peralatan terlebih dahulu.';
       return;
     }
 
@@ -117,8 +149,13 @@ export class RentalComponent implements OnInit {
       return;
     }
 
+    if (this.quantity > (gear.availableStock ?? 0)) {
+      this.errorMessage = `Jumlah melebihi stok tersedia (${gear.availableStock}).`;
+      return;
+    }
+
     const isDuplicate = this.rentalDetails.some(
-      detail => detail.gearItemId === this.gearItemId
+      detail => detail.gearItemId === gear.gearItemId
     );
 
     if (isDuplicate) {
@@ -127,8 +164,9 @@ export class RentalComponent implements OnInit {
     }
 
     this.rentalDetails.push({
-      gearItemId: this.gearItemId,
-      quantity: this.quantity
+      gearItemId: gear.gearItemId,
+      quantity: this.quantity,
+      gearName: gear.gearName
     });
 
     this.gearItemId = 0;
@@ -155,7 +193,7 @@ export class RentalComponent implements OnInit {
     this.successMessage = '';
 
     if (!Number.isInteger(this.customerId) || this.customerId <= 0) {
-      this.errorMessage = 'Customer ID harus berupa angka lebih dari 0.';
+      this.errorMessage = 'Pilih customer terlebih dahulu.';
       return;
     }
 
@@ -196,6 +234,7 @@ export class RentalComponent implements OnInit {
           // Memuat ulang daftar agar data mengikuti hasil backend
           this.resetForm();
           this.loadRentals();
+          this.loadGearItems();
         } else {
           this.errorMessage = 'Transaksi berhasil diproses, tetapi data tidak ditemukan.';
         }

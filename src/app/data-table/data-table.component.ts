@@ -15,4 +15,25 @@ export class DataTableComponent {
   @Input() title: string = '';
 
   @Output() edit = new EventEmitter<any>();
+  @Output() view = new EventEmitter<any>();
+  @Output() delete = new EventEmitter<any>();
+
+  isDateColumn(header: string): boolean {
+    const h = header.toLowerCase();
+    const isDate = h.includes('date') || h.includes('tanggal') || h.includes('createdat') || h.includes('tgl');
+    return isDate && !this.isDateTimeColumn(header);
+  }
+
+  isDateTimeColumn(header: string): boolean {
+    const h = header.toLowerCase();
+    return h.includes('waktu') || h.includes('time') || h.includes('jam');
+  }
+
+  isStatusColumn(header: string): boolean {
+    return header.toLowerCase() === 'status';
+  }
+
+  isActionColumn(header: string): boolean {
+    return header.toLowerCase() === 'aksi';
+  }
 }
