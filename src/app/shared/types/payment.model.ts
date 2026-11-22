@@ -13,7 +13,6 @@ export interface PaymentResponse {
 }
 
 export interface PaymentRequest {
-  rentalId: number;
   paymentMethod: string;
 }
 

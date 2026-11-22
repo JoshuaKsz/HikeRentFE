@@ -12,7 +12,7 @@ import { Customer } from '../shared/types/customer.model';
 @Component({
   selector: 'app-customer',
   standalone: true,
-  imports: [ CommonModule, RouterLink, SidebarComponent, DataTableComponent, NavbarComponent,LayoutComponent ],
+  imports: [ CommonModule, RouterLink, DataTableComponent ],
   templateUrl: './customer.component.html',
   styleUrl: './customer.component.css'
 })
@@ -31,7 +31,7 @@ export class CustomerComponent implements OnInit {
       'fullName',
       'email',
       'phoneNumber',
-      'Adress',
+      'Alamat',
       'identityNumber',
       'createdAt',
       'aksi'

@@ -1,11 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { validateHeaderName } from 'http';
-import { PassThrough } from 'stream';
 import { LoginService } from '../services/login/login.service';
 import { AuthService } from '../services/auth.service';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -18,8 +15,7 @@ export class LoginComponent implements OnInit {
   private router = inject(Router);
   loginSvc = inject(LoginService);
   authSvc = inject(AuthService);
-  http = inject(HttpClient);
-  
+
   fb = inject(FormBuilder);
 
   loginForm = this.fb.group({
@@ -34,17 +30,6 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
 
   }
-
-  userForm = new FormGroup({
-    email: new FormControl('', [
-      Validators.required,
-      Validators.email
-    ]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(8)
-    ])
-  });
 
   onLoginHandler() {
     const formValue = this.loginForm.value;

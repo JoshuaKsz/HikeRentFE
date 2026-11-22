@@ -1,9 +1,10 @@
 
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { DataTableComponent } from '../data-table/data-table.component';
+import { ActivityLogService, ActivityLogResponse } from '../services/activity-log/activity-log.service';
 
 @Component({
   selector: 'app-aktivitas',
@@ -17,13 +18,13 @@ import { DataTableComponent } from '../data-table/data-table.component';
   templateUrl: './aktivitas.component.html',
   styleUrl: './aktivitas.component.css'
 })
-export class AktivitasComponent {
+export class AktivitasComponent implements OnInit {
 
   isSidebarCollapsed = false;
-
   searchText = '';
 
-  // Data tabel aktivitas
+  activitySvc = inject(ActivityLogService);
+
   table = {
     title: 'Riwayat Aktivitas',
     headers: [
@@ -32,23 +33,36 @@ export class AktivitasComponent {
       'Aktivitas',
       'Tanggal & Waktu'
     ],
-    data: [
-      {
-        'ID': 1,
-        'Nama Staff': 'Andi Pratama',
-        'Aktivitas': 'Login ke sistem',
-        'Tanggal & Waktu': '19 Nov 2026, 08:15'
-      }
-    ]
+    data: [] as any[]
   };
 
-  // Filter data berdasarkan pencarian
+  ngOnInit(): void {
+    this.loadActivities();
+  }
+
+  loadActivities(): void {
+    this.activitySvc.getActivities().subscribe({
+      next: (activities: ActivityLogResponse[]) => {
+        this.table.data = activities.map(a => ({
+          'ID': a.activityLogId,
+          'Nama Staff': a.staffName,
+          'Aktivitas': a.activity,
+          'Tanggal & Waktu': new Date(a.activityDate).toLocaleString('id-ID', {
+            day: '2-digit', month: 'short', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+          })
+        }));
+      },
+      error: (err) => console.error('Error loading activities:', err)
+    });
+  }
+
   get filteredActivities() {
     const keyword = this.searchText.toLowerCase().trim();
 
     return this.table.data.filter(activity =>
       Object.values(activity).some(value =>
-        value.toString().toLowerCase().includes(keyword)
+        String(value).toLowerCase().includes(keyword)
       )
     );
   }

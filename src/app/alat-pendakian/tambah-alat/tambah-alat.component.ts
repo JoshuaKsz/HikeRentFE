@@ -28,7 +28,6 @@ export class TambahAlatComponent implements OnInit {
     dailyPrice: 0,
     replacementPrice: 0,
     totalStock: 0,
-    maintenanceStock: 0,
     damagedStock: 0,
     imageUrl: null,
     isActive: true
@@ -83,7 +82,6 @@ export class TambahAlatComponent implements OnInit {
       this.form.dailyPrice <= 0 ||
       this.form.replacementPrice <= 0 ||
       this.form.totalStock < 0 ||
-      this.form.maintenanceStock < 0 ||
       this.form.damagedStock < 0
     ) {
       this.errorMessage = 'Lengkapi data dengan benar sebelum menyimpan.';
@@ -91,10 +89,9 @@ export class TambahAlatComponent implements OnInit {
     }
 
     if (
-      this.form.maintenanceStock + this.form.damagedStock >
-      this.form.totalStock
+      this.form.damagedStock > this.form.totalStock
     ) {
-      this.errorMessage = 'Stok perawatan dan rusak tidak boleh melebihi total stok.';
+      this.errorMessage = 'Stok rusak tidak boleh melebihi total stok.';
       return;
     }
 

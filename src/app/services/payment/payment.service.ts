@@ -30,6 +30,12 @@ export class PaymentService {
     );
   }
 
+  getPendingPayments(): Observable<PaymentApiResponse<any[]>> {
+    return this.http.get<PaymentApiResponse<any[]>>(
+      `${this.apiUrl}/pending`
+    );
+  }
+
   createPayment(
     rentalId: number,
     request: PaymentRequest

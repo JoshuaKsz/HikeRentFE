@@ -10,7 +10,6 @@ export interface GearItem {
   dailyPrice: number;
   replacementPrice: number;
   totalStock: number;
-  maintenanceStock: number;
   damagedStock: number;
   availableStock: number;
   imageUrl: string | null;
@@ -25,7 +24,6 @@ export interface GearItemRequest {
   dailyPrice: number;
   replacementPrice: number;
   totalStock: number;
-  maintenanceStock: number;
   damagedStock: number;
   imageUrl: string | null;
   isActive: boolean;

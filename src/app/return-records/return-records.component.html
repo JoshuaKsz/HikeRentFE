@@ -41,8 +41,9 @@
               name="statusFilter">
 
               <option value="Semua Status">Semua Status</option>
-              <option value="Menunggu">Menunggu</option>
-              <option value="Diproses">Diproses</option>
+              <option value="Ongoing">Ongoing</option>
+              <option value="Returned">Returned</option>
+              <option value="Completed">Completed</option>
 
             </select>
           </div>
@@ -81,8 +82,9 @@
                   <span
                     class="status-badge"
                     [ngClass]="{
-                      'status-waiting': rental.status === 'Menunggu',
-                      'status-process': rental.status === 'Diproses'
+                      'status-waiting': rental.status === 'Returned',
+                      'status-process': rental.status === 'Ongoing',
+                      'status-completed': rental.status === 'Completed'
                     }">
                     {{ rental.status }}
                   </span>
@@ -284,7 +286,7 @@
 
             <div class="col-md-6">
 
-              <div class="fee-card">
+              <div class="fee-card" *ngIf="feesVisible; else feePlaceholder">
 
                 <div class="fee-title">
                   <i class="bi bi-coin"></i>
@@ -313,19 +315,35 @@
 
               </div>
 
+              <ng-template #feePlaceholder>
+                <div class="fee-card">
+                  <div class="fee-title">
+                    <i class="bi bi-coin"></i>
+                    <h5>Rincian Biaya</h5>
+                  </div>
+                  <p class="text-muted small mb-0">
+                    Biaya denda, kerusakan, dan kehilangan dihitung otomatis oleh sistem setelah pengembalian disimpan.
+                  </p>
+                </div>
+              </ng-template>
+
             </div>
 
           </div>
+
+          <div class="alert alert-danger py-2 small mt-3" *ngIf="errorMessage">{{ errorMessage }}</div>
+          <div class="alert alert-success py-2 small mt-3" *ngIf="successMessage">{{ successMessage }}</div>
 
           <div class="d-flex justify-content-end mt-3">
 
             <button
               type="button"
               class="btn btn-save-return"
-              (click)="saveReturn()">
+              (click)="saveReturn()"
+              [disabled]="isSaving">
 
               <i class="bi bi-floppy"></i>
-              Simpan Pengembalian
+              {{ isSaving ? 'Menyimpan...' : 'Simpan Pengembalian' }}
 
             </button>
 

@@ -1,10 +1,15 @@
 
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { forkJoin } from 'rxjs';
+import { RentalService } from '../services/rental/rental.service';
+import { GearItemService } from '../services/gear-item/gear-item.service';
+import { ReturnRecordService, ReturnRecordRequest, ReturnRecordResponse } from '../services/return-record/return-record.service';
 
 interface ReturnItem {
   rentalDetailId: number;
+  gearItemId: number;
   itemName: string;
   itemImage: string;
   quantityRented: number;
@@ -23,11 +28,6 @@ interface Rental {
   items: ReturnItem[];
 }
 
-interface Staff {
-  userId: number;
-  fullName: string;
-}
-
 @Component({
   selector: 'app-return-records',
   standalone: true,
@@ -35,138 +35,156 @@ interface Staff {
   templateUrl: './return-records.component.html',
   styleUrl: './return-records.component.css'
 })
-export class ReturnRecordsComponent {
+export class ReturnRecordsComponent implements OnInit {
 
   searchText = '';
   statusFilter = 'Semua Status';
 
-  rentals: Rental[] = [
-    {
-      rentalId: 1,
-      rentalCode: 'RENT001',
-      customerName: 'Andi Pratama',
-      returnDate: '2026-11-21',
-      status: 'Menunggu',
-      totalItems: 1,
-      items: [
-        {
-          rentalDetailId: 101,
-          itemName: 'Tenda Dome 4P',
-          itemImage: 'assets/tenda.png',
-          quantityRented: 1,
-          quantityReturned: 1,
-          damagedQuantity: 0,
-          lostQuantity: 0
-        }
-      ]
-    }
-  ];
+  rentalSvc = inject(RentalService);
+  gearSvc = inject(GearItemService);
+  returnSvc = inject(ReturnRecordService);
 
-  staffList: Staff[] = [
-    {
-      userId: 1,
-      fullName: 'Andi Pratama'
-    }
-  ];
-
-  selectedRental: Rental | null = this.rentals[0];
-
-  selectedUserId = 1;
-
+  rentals: Rental[] = [];
+  selectedRental: Rental | null = null;
   actualReturnDate = this.getCurrentDateTime();
-
   notes = '';
 
   totalLateFee = 0;
   totalDamageFee = 0;
   totalLostItemFee = 0;
+  feesVisible = false;
+  isSaving = false;
+  errorMessage = '';
+  successMessage = '';
 
-  get totalReturnFee(): number {
-    return (
-      this.totalLateFee +
-      this.totalDamageFee +
-      this.totalLostItemFee
-    );
+  ngOnInit(): void {
+    this.loadRentals();
+  }
+
+  loadRentals(): void {
+    this.gearSvc.getGearItems().subscribe({
+      next: (gears) => {
+        const imageByGear = new Map<number, string>();
+        gears.forEach(g => imageByGear.set(g.gearItemId, g.imageUrl || ''));
+
+        this.rentalSvc.getRentals().subscribe({
+          next: (res) => {
+            this.rentals = (res.data || []).map(r => ({
+              rentalId: r.rentalId,
+              rentalCode: r.rentalCode,
+              customerName: r.customerName,
+              returnDate: r.plannedReturnDate,
+              status: r.status,
+              totalItems: r.details.length,
+              items: r.details.map(d => ({
+                rentalDetailId: d.rentalDetailId,
+                gearItemId: d.gearItemId,
+                itemName: d.gearName,
+                itemImage: imageByGear.get(d.gearItemId) || '',
+                quantityRented: d.quantity,
+                quantityReturned: d.quantity,
+                damagedQuantity: 0,
+                lostQuantity: 0
+              }))
+            }));
+
+            if (!this.selectedRental && this.rentals.length > 0) {
+              this.selectedRental = this.rentals[0];
+            }
+          },
+          error: (err) => console.error('Error loading rentals:', err)
+        });
+      },
+      error: (err) => console.error('Error loading gear items:', err)
+    });
   }
 
   get filteredRentals(): Rental[] {
     return this.rentals.filter(rental => {
-
       const keyword = this.searchText.toLowerCase();
-
       const matchesSearch =
         rental.rentalCode.toLowerCase().includes(keyword) ||
         rental.customerName.toLowerCase().includes(keyword);
-
       const matchesStatus =
         this.statusFilter === 'Semua Status' ||
         rental.status === this.statusFilter;
-
       return matchesSearch && matchesStatus;
     });
   }
 
   selectRental(rental: Rental): void {
     this.selectedRental = rental;
-    this.selectedUserId = 1;
     this.actualReturnDate = this.getCurrentDateTime();
     this.notes = '';
+    this.resetFees();
   }
 
   getTotalReturned(): number {
-    if (!this.selectedRental) {
-      return 0;
-    }
+    if (!this.selectedRental) return 0;
+    return this.selectedRental.items.reduce((t, i) => t + i.quantityReturned, 0);
+  }
 
-    return this.selectedRental.items.reduce(
-      (total, item) => total + item.quantityReturned,
-      0
-    );
+  get totalReturnFee(): number {
+    return this.totalLateFee + this.totalDamageFee + this.totalLostItemFee;
   }
 
   saveReturn(): void {
+    this.errorMessage = '';
+    this.successMessage = '';
 
     if (!this.selectedRental) {
-      alert('Silakan pilih data penyewaan terlebih dahulu.');
+      this.errorMessage = 'Silakan pilih data penyewaan terlebih dahulu.';
       return;
     }
 
-    const returnData = {
-      rentalId: this.selectedRental.rentalId,
-      rentalCode: this.selectedRental.rentalCode,
+    const requests: ReturnRecordRequest[] = [];
 
-      rentalDetails: this.selectedRental.items.map(item => ({
+    for (const item of this.selectedRental.items) {
+      const total = item.quantityReturned + item.damagedQuantity + item.lostQuantity;
+      if (total !== item.quantityRented) {
+        this.errorMessage = `Jumlah kembali + rusak + hilang untuk ${item.itemName} harus sama dengan ${item.quantityRented}.`;
+        return;
+      }
+
+      requests.push({
+        rentalId: this.selectedRental.rentalId,
         rentalDetailId: item.rentalDetailId,
         quantityReturned: item.quantityReturned,
         damagedQuantity: item.damagedQuantity,
-        lostQuantity: item.lostQuantity
-      })),
+        lostQuantity: item.lostQuantity,
+        notes: this.notes,
+        actualReturnDate: this.actualReturnDate
+      });
+    }
 
-      userId: this.selectedUserId,
-      actualReturnDate: this.actualReturnDate,
-      notes: this.notes,
+    this.isSaving = true;
+    forkJoin(requests.map(req => this.returnSvc.createReturn(req))).subscribe({
+      next: (responses: ReturnRecordResponse[]) => {
+        this.totalLateFee = responses.reduce((s, r) => s + r.lateFee, 0);
+        this.totalDamageFee = responses.reduce((s, r) => s + r.damageFee, 0);
+        this.totalLostItemFee = responses.reduce((s, r) => s + r.lostItemFee, 0);
+        this.feesVisible = true;
+        this.isSaving = false;
+        this.successMessage = 'Data pengembalian berhasil disimpan.';
+        this.loadRentals();
+      },
+      error: (err) => {
+        this.isSaving = false;
+        this.errorMessage = err?.error?.message || 'Gagal menyimpan data pengembalian.';
+      }
+    });
+  }
 
-      lateFee: this.totalLateFee,
-      damageFee: this.totalDamageFee,
-      lostItemFee: this.totalLostItemFee,
-      totalReturnFee: this.totalReturnFee
-    };
-
-    console.log('Data Pengembalian:', returnData);
-
-    alert('Data pengembalian berhasil disiapkan.');
+  private resetFees(): void {
+    this.totalLateFee = 0;
+    this.totalDamageFee = 0;
+    this.totalLostItemFee = 0;
+    this.feesVisible = false;
   }
 
   private getCurrentDateTime(): string {
     const now = new Date();
-
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
+    const pad = (n: number) => String(n).padStart(2, '0');
+    return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
   }
-
 }

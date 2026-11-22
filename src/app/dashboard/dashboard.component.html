@@ -23,7 +23,7 @@
 
           <div>
             <h6 class="text-muted">Total Alat</h6>
-            <h2 class="fw-bold mb-0">1</h2>
+            <h2 class="fw-bold mb-0">{{totalAlat}}</h2>
           </div>
 
         </div>
@@ -41,7 +41,7 @@
 
           <div>
             <h6 class="text-muted">Stock Tersedia</h6>
-            <h2 class="fw-bold mb-0">85</h2>
+            <h2 class="fw-bold mb-0">{{stockTersedia}}</h2>
           </div>
 
         </div>
@@ -59,7 +59,7 @@
 
           <div>
             <h6 class="text-muted">Rental Aktif</h6>
-            <h2 class="fw-bold mb-0">5</h2>
+            <h2 class="fw-bold mb-0">{{rentalAktif}}</h2>
           </div>
 
         </div>
@@ -76,8 +76,8 @@
           </div>
 
           <div>
-            <h6 class="text-muted">Menunggu Pengambilan</h6>
-            <h2 class="fw-bold mb-0">3</h2>
+            <h6 class="text-muted">Menunggu Pembayaran</h6>
+            <h2 class="fw-bold mb-0">{{menungguPembayaran}}</h2>
           </div>
 
         </div>
@@ -114,21 +114,21 @@
           <div class="stock-item">
             <span class="stock-dot bg-success"></span>
             <span class="flex-grow-1">Tersedia</span>
-            <span class="stock-number">123</span>
+            <span class="stock-number">{{stockTersedia}}</span>
           </div>
 
           <!-- Perawatan -->
           <div class="stock-item">
             <span class="stock-dot bg-warning"></span>
-            <span class="flex-grow-1">Perawatan</span>
-            <span class="stock-number">4</span>
+            <span class="flex-grow-1">Disewa</span>
+            <span class="stock-number">{{disewa}}</span>
           </div>
 
           <!-- Rusak -->
           <div class="stock-item">
             <span class="stock-dot bg-danger"></span>
             <span class="flex-grow-1">Rusak</span>
-            <span class="stock-number">2</span>
+            <span class="stock-number">{{rusak}}</span>
           </div>
 
         </div>
