@@ -8,6 +8,7 @@ import {
   PaymentResponse,
   PaymentApiResponse
 } from '../../shared/types/payment.model';
+import { RentalApiResponse, RentalResponse } from '../../shared/types/rental.model';
 
 @Injectable({
   providedIn: 'root'
@@ -30,8 +31,8 @@ export class PaymentService {
     );
   }
 
-  getPendingPayments(): Observable<PaymentApiResponse<any[]>> {
-    return this.http.get<PaymentApiResponse<any[]>>(
+  getPendingPayments(): Observable<RentalApiResponse<RentalResponse[]>> {
+    return this.http.get<RentalApiResponse<RentalResponse[]>>(
       `${this.apiUrl}/pending`
     );
   }

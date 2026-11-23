@@ -7,6 +7,10 @@
     </div>
   </div>
 
+  <div *ngIf="successMessage" class="payment-message success">
+    {{ successMessage }}
+  </div>
+
   <div class="payment-statistics">
     <div class="stat-card">
       <div class="stat-icon blue">
@@ -51,8 +55,8 @@
 
       <select [(ngModel)]="selectedStatus" class="status-filter">
         <option value="Semua">Semua Status</option>
-        <option value="Paid">Dibayar</option>
         <option value="Unpaid">Belum Dibayar</option>
+        <option value="Paid">Sudah Dibayar</option>
       </select>
 
       <button type="button" class="btn-refresh" (click)="loadPayments()">
@@ -107,6 +111,16 @@
             </td>
             <td>
               <button
+                *ngIf="payment.isPending"
+                type="button"
+                class="btn-pay"
+                title="Proses pembayaran"
+                (click)="openPayModal(payment)">
+                Bayar
+              </button>
+
+              <button
+                *ngIf="!payment.isPending"
                 type="button"
                 class="btn-detail"
                 title="Detail pembayaran"
@@ -125,6 +139,52 @@
           </tr>
         </tbody>
       </table>
+    </div>
+  </div>
+
+  <div class="modal-overlay" *ngIf="selectedPendingRental" (click)="closePayModal()">
+    <div class="detail-modal" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Proses Pembayaran</h3>
+        <button type="button" (click)="closePayModal()">x</button>
+      </div>
+
+      <div class="modal-body" *ngIf="selectedPendingRental">
+        <div class="detail-row">
+          <span>Kode Rental</span>
+          <strong>{{ selectedPendingRental.rentalCode }}</strong>
+        </div>
+
+        <div class="detail-row">
+          <span>Customer</span>
+          <strong>{{ selectedPendingRental.customerName }}</strong>
+        </div>
+
+        <div class="detail-row">
+          <span>Total Tagihan</span>
+          <strong class="text-danger">
+            {{ formatRupiah(selectedPendingRental.grandTotal) }}
+          </strong>
+        </div>
+
+        <div class="form-group">
+          <label>Metode Pembayaran</label>
+          <select [(ngModel)]="paymentMethod">
+            <option value="Cash">Cash</option>
+            <option value="QRIS">QRIS</option>
+            <option value="Transfer">Transfer</option>
+            <option value="Debit">Debit</option>
+          </select>
+        </div>
+
+        <button
+          type="button"
+          class="btn-confirm"
+          (click)="processPayment()"
+          [disabled]="isProcessing">
+          {{ isProcessing ? 'Memproses...' : 'Konfirmasi Pembayaran' }}
+        </button>
+      </div>
     </div>
   </div>
 

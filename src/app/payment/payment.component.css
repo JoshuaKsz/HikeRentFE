@@ -226,6 +226,74 @@
   background: #d4e3ff;
 }
 
+.btn-pay {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 7px;
+  background: #2459a6;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.btn-pay:hover {
+  background: #1d4a8a;
+}
+
+.payment-message.success {
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  background: #d1f7df;
+  color: #087c3e;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-group {
+  margin-top: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #6c757d;
+  font-size: 13px;
+}
+
+.form-group select {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 7px;
+  background: #fff;
+  font-size: 14px;
+}
+
+.btn-confirm {
+  width: 100%;
+  margin-top: 24px;
+  padding: 12px;
+  border: none;
+  border-radius: 7px;
+  background: #2459a6;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.btn-confirm:hover:not(:disabled) {
+  background: #1d4a8a;
+}
+
+.btn-confirm:disabled {
+  opacity: 0.65;
+}
+
+.text-danger {
+  color: #b02a37 !important;
+}
+
 .table-message,
 .empty-message {
   padding: 35px 15px;

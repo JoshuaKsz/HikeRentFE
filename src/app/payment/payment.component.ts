@@ -2,8 +2,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 import { PaymentService } from '../services/payment/payment.service';
 import { PaymentResponse } from '../shared/types/payment.model';
+import { RentalResponse } from '../shared/types/rental.model';
+
+interface PaymentRow extends PaymentResponse {
+  isPending: boolean;
+}
 
 @Component({
   selector: 'app-payment',
@@ -15,28 +21,55 @@ import { PaymentResponse } from '../shared/types/payment.model';
 export class PaymentComponent implements OnInit {
   private paymentService = inject(PaymentService);
 
-  payments: PaymentResponse[] = [];
+  rows: PaymentRow[] = [];
   searchText = '';
   selectedStatus = 'Semua';
   isLoading = false;
+  isProcessing = false;
   errorMessage = '';
-  selectedPayment: PaymentResponse | null = null;
+  successMessage = '';
+  selectedPayment: PaymentRow | null = null;
+  selectedPendingRental: PaymentRow | null = null;
+  paymentMethod = 'Cash';
 
   ngOnInit(): void {
-    this.loadPayments();
+    this.loadData();
   }
 
-  loadPayments(): void {
+  loadData(): void {
     this.isLoading = true;
     this.errorMessage = '';
 
-    this.paymentService.getPayments().subscribe({
-      next: (response) => {
-        this.payments = response.data ?? [];
+    forkJoin({
+      payments: this.paymentService.getPayments(),
+      pending: this.paymentService.getPendingPayments()
+    }).subscribe({
+      next: (result) => {
+        const paidRows: PaymentRow[] = (result.payments.data ?? []).map(
+          payment => ({ ...payment, isPending: false })
+        );
+
+        const pendingRows: PaymentRow[] = (result.pending.data ?? []).map(
+          (rental: RentalResponse) => ({
+            paymentId: 0,
+            paymentCode: '-',
+            rentalId: rental.rentalId,
+            rentalCode: rental.rentalCode,
+            customerName: rental.customerName,
+            amount: rental.grandTotal,
+            grandTotal: rental.grandTotal,
+            paymentMethod: '-',
+            paymentDate: '',
+            paymentStatus: 'Unpaid',
+            isPending: true
+          })
+        );
+
+        this.rows = [...pendingRows, ...paidRows];
         this.isLoading = false;
       },
       error: (error) => {
-        this.payments = [];
+        this.rows = [];
         this.errorMessage =
           error.error?.message || 'Gagal mengambil data pembayaran.';
         this.isLoading = false;
@@ -44,10 +77,51 @@ export class PaymentComponent implements OnInit {
     });
   }
 
-  get filteredPayments(): PaymentResponse[] {
+  loadPayments(): void {
+    this.loadData();
+  }
+
+  openPayModal(row: PaymentRow): void {
+    this.selectedPendingRental = row;
+    this.paymentMethod = 'Cash';
+  }
+
+  closePayModal(): void {
+    this.selectedPendingRental = null;
+  }
+
+  processPayment(): void {
+    if (!this.selectedPendingRental) {
+      return;
+    }
+
+    this.isProcessing = true;
+    this.errorMessage = '';
+
+    this.paymentService
+      .createPayment(this.selectedPendingRental.rentalId, {
+        paymentMethod: this.paymentMethod
+      })
+      .subscribe({
+        next: () => {
+          this.successMessage = 'Pembayaran berhasil diproses.';
+          this.selectedPendingRental = null;
+          this.isProcessing = false;
+          this.loadData();
+          setTimeout(() => this.successMessage = '', 3000);
+        },
+        error: (error) => {
+          this.errorMessage =
+            error.error?.message || 'Gagal memproses pembayaran.';
+          this.isProcessing = false;
+        }
+      });
+  }
+
+  get filteredPayments(): PaymentRow[] {
     const keyword = this.searchText.trim().toLowerCase();
 
-    return this.payments.filter(payment => {
+    return this.rows.filter(payment => {
       const matchesSearch =
         (payment.paymentCode ?? '').toLowerCase().includes(keyword) ||
         (payment.rentalCode ?? '').toLowerCase().includes(keyword) ||
@@ -63,22 +137,22 @@ export class PaymentComponent implements OnInit {
   }
 
   get totalPayments(): number {
-    return this.payments.length;
+    return this.rows.length;
   }
 
   get totalPaid(): number {
-    return this.payments
+    return this.rows
       .filter(payment => payment.paymentStatus?.toLowerCase() === 'paid')
       .reduce((total, payment) => total + payment.amount, 0);
   }
 
   get totalUnpaid(): number {
-    return this.payments
+    return this.rows
       .filter(payment => payment.paymentStatus?.toLowerCase() === 'unpaid')
       .reduce((total, payment) => total + payment.amount, 0);
   }
 
-  showDetail(payment: PaymentResponse): void {
+  showDetail(payment: PaymentRow): void {
     this.selectedPayment = payment;
   }
 
