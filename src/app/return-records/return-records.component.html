@@ -182,7 +182,7 @@
                 <tr>
                   <th>Nama Alat</th>
                   <th>Qty Disewa</th>
-                  <th>Qty Kembali</th>
+                  <th>Baik</th>
                   <th>Rusak</th>
                   <th>Hilang</th>
                 </tr>
@@ -196,9 +196,16 @@
                     <div class="gear-information">
 
                       <img
+                        *ngIf="item.itemImage; else noImage"
                         [src]="item.itemImage"
                         [alt]="item.itemName"
                         class="gear-image">
+
+                      <ng-template #noImage>
+                        <div class="gear-image gear-image-placeholder">
+                          <i class="bi bi-box-seam"></i>
+                        </div>
+                      </ng-template>
 
                         <div>
                         <strong>{{ item.itemName }}</strong>

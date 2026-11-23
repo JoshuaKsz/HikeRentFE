@@ -7,6 +7,7 @@ import { RentalService } from '../services/rental/rental.service';
 import { GearItemService } from '../services/gear-item/gear-item.service';
 import { ReturnRecordService, ReturnRecordRequest, ReturnRecordResponse } from '../services/return-record/return-record.service';
 import { from, concatMap, toArray } from 'rxjs';
+import { environment } from '../../environments/environment';
 
 interface ReturnItem {
   rentalDetailId: number;
@@ -66,7 +67,10 @@ export class ReturnRecordsComponent implements OnInit {
     this.gearSvc.getGearItems().subscribe({
       next: (gears) => {
         const imageByGear = new Map<number, string>();
-        gears.forEach(g => imageByGear.set(g.gearItemId, g.imageUrl || ''));
+        gears.forEach(g => imageByGear.set(
+          g.gearItemId,
+          this.resolveImageUrl(g.imageUrl) || ''
+        ));
 
         this.rentalSvc.getRentals().subscribe({
           next: (res) => {
@@ -149,7 +153,7 @@ export class ReturnRecordsComponent implements OnInit {
     for (const item of this.selectedRental.items) {
       const total = item.quantityReturned + item.damagedQuantity + item.lostQuantity;
       if (total !== item.quantityRented) {
-        this.errorMessage = `Jumlah kembali + rusak + hilang untuk ${item.itemName} harus sama dengan ${item.quantityRented}.`;
+        this.errorMessage = `Jumlah baik + rusak + hilang untuk ${item.itemName} harus sama dengan ${item.quantityRented}.`;
         return;
       }
 
@@ -213,6 +217,13 @@ export class ReturnRecordsComponent implements OnInit {
     this.totalDamageFee = 0;
     this.totalLostItemFee = 0;
     this.feesVisible = false;
+  }
+
+  resolveImageUrl(url: string | null | undefined): string | null {
+    if (!url) return null;
+    if (url.startsWith('http') || url.startsWith('assets/')) return url;
+    if (url.startsWith('/uploads/')) return `${environment.apiUrl}${url}`;
+    return url;
   }
 
   private getCurrentDateTime(): string {
